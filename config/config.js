@@ -22,9 +22,10 @@ module.exports = {
    * @type String
    * @optional
    */
-  description: 'This integration queries IP and Domain entities against the Andariel Botnet/RDP dataset.',
+  description:
+    'This integration queries IP and Domain entities against the Andariel Botnet/RDP dataset.',
   entityTypes: ['ipv4', 'domain'],
-  styles: ["./styles/style.less"],
+  styles: ['./styles/style.less'],
   /**
    * Provide custom component logic and template for rendering the integration details block.  If you do not
    * provide a custom template and/or component then the integration will display data as a table of key value
@@ -58,7 +59,7 @@ module.exports = {
     // the url parameter (by embedding the auth info in the uri)
     proxy: '',
 
-    rejectUnauthorized: false
+    rejectUnauthorized: true
   },
   logging: {
     level: 'info' //trace, debug, info, warn, error, fatal
@@ -70,15 +71,15 @@ module.exports = {
    * @type Array
    * @optional
    */
-   options: [
-     {
-       key: "apiKey",
-       name: "Valid Andariel API Key",
-       description: "Valid Andariel API Key",
-       default: "",
-       type: "password",
-       userCanEdit: true,
-       adminOnly: false
-     }
-   ]
+  options: [
+    {
+      key: 'apiKey',
+      name: 'Valid Andariel API Key',
+      description: 'Valid Andariel API Key',
+      default: '',
+      type: 'password',
+      userCanEdit: true,
+      adminOnly: false
+    }
+  ]
 };

@@ -1,6 +1,6 @@
-# Polarity Advanced Intelligence LLC, Botnet/RDP API Integration
+# Polarity Advanced Intelligence LLC, Andariel Botnet/RDP API Integration
 
-The Polarity Botnet/RDP integration allows indicator searches across the Advanced Intelligence breach records dataset.
+The Polarity Andariel Botnet/RDP integration allows indicator searches across the Advanced Intelligence breach records dataset.
 
 Check out a snapshot if the integration below: 
 ![image](https://user-images.githubusercontent.com/22529325/97003834-14567a00-150a-11eb-8813-78ca15b20f41.png)
