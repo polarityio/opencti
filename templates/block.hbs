@@ -3,100 +3,101 @@
     <span class="p-title">{{fa-icon "bug" fixedWidth=true}} Search Result Detail</span>
   </div>
   {{#each details.hits.hits as |hit index|}}
-    <span class="p-title">Result #{{inc index}}:</span>
-      {{#if hit._index}}
-        {{#if (eq hit._index "logstash--uasrdp-accounts")}}
-          <div>
-              <span class="p-key">Index: </span>
-              <span class="p-value">RDP Underground Shop Sale</span>
-          </div>
-        {{/if}}
-        {{#if (eq hit._index "logstash-bazarbackdoor-main-victim-data")}}
-          <div>
-              <span class="p-key">Index: </span>
-              <span class="p-value">BazarLoader Malware Intrusion</span>
-          </div>
-        {{/if}}
-        {{#if (eq hit._index "logstash-trickbot-main-victim-data")}}
-          <div>
-              <span class="p-key">Index: </span>
-              <span class="p-value">Trickbot Main Botnet Intrusion</span>
-          </div>
-        {{/if}}
-        {{#if (eq hit._index "logstash-zloader-victim-data")}}
-          <div>
-              <span class="p-key">Index: </span>
-              <span class="p-value">ZLoader AKA Silent Night Botnet Intrusion</span>
-          </div>
-        {{/if}}
-      {{/if}}
-      {{#if hit._score}}
-        <div>
-            <span class="p-key">Severity Score: </span>
-            <span class="p-value">{{hit._score}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.geo_country}}
-        <div>
-            <span class="p-key">Geolocated Country: </span>
-            <span class="p-value">{{hit._source.geo_country}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.geo_city}}
-        <div>
-            <span class="p-key">Geolocated City: </span>
-            <span class="p-value">{{hit._source.geo_city}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.geo_isp}}
-        <div>
-            <span class="p-key">Geolocated ISP: </span>
-            <span class="p-value">{{hit._source.geo_isp}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.geo_domain}}
-        <div>
-            <span class="p-key">Geolocated Domain: </span>
-            <span class="p-value">{{hit._source.geo_domain}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.live}}
-        <div>
-            <span class="p-key">Is Live: </span>
-            <span class="p-value">{{hit._source.live}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.first_seen}}
-        <div>
-            <span class="p-key">First Seen: </span>
-            <span class="p-value">{{hit._source.first_seen}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.last_seen}}
-        <div>
-            <span class="p-key">Last Seen: </span>
-            <span class="p-value">{{hit._source.last_seen}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.domain}}
-        <div>
-            <span class="p-key">Domain: </span>
-            <span class="p-value">{{hit._source.domain}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.created_at}}
-        <div>
-            <span class="p-key">Created At: </span>
-            <span class="p-value">{{hit._source.created_at}}</span>
-        </div>
-      {{/if}}
-      {{#if hit._source.updated_at}}
-        <div>
-            <span class="p-key">Updated At: </span>
-            <span class="p-value">{{hit._source.updated_at}}</span>
-        </div>
-      {{/if}}
+    {{#if (gt index 0)}}
       <hr>
+    {{/if}}
+    <span class="p-title">Result #{{inc index}}:</span>
+    {{#if hit._index}}
+      {{#if (eq hit._index "logstash--uasrdp-accounts")}}
+        <div>
+            <span class="p-key">Index: </span>
+            <span class="p-value">RDP Underground Shop Sale</span>
+        </div>
+      {{/if}}
+      {{#if (eq hit._index "logstash-bazarbackdoor-main-victim-data")}}
+        <div>
+            <span class="p-key">Index: </span>
+            <span class="p-value">BazarLoader Malware Intrusion</span>
+        </div>
+      {{/if}}
+      {{#if (eq hit._index "logstash-trickbot-main-victim-data")}}
+        <div>
+            <span class="p-key">Index: </span>
+            <span class="p-value">Trickbot Main Botnet Intrusion</span>
+        </div>
+      {{/if}}
+      {{#if (eq hit._index "logstash-zloader-victim-data")}}
+        <div>
+            <span class="p-key">Index: </span>
+            <span class="p-value">ZLoader AKA Silent Night Botnet Intrusion</span>
+        </div>
+      {{/if}}
+    {{/if}}
+    {{#if hit._score}}
+      <div>
+          <span class="p-key">Severity Score: </span>
+          <span class="p-value">{{hit._score}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.geo_country}}
+      <div>
+          <span class="p-key">Geolocated Country: </span>
+          <span class="p-value">{{hit._source.geo_country}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.geo_city}}
+      <div>
+          <span class="p-key">Geolocated City: </span>
+          <span class="p-value">{{hit._source.geo_city}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.geo_isp}}
+      <div>
+          <span class="p-key">Geolocated ISP: </span>
+          <span class="p-value">{{hit._source.geo_isp}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.geo_domain}}
+      <div>
+          <span class="p-key">Geolocated Domain: </span>
+          <span class="p-value">{{hit._source.geo_domain}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.live}}
+      <div>
+          <span class="p-key">Is Live: </span>
+          <span class="p-value">{{hit._source.live}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.first_seen}}
+      <div>
+          <span class="p-key">First Seen: </span>
+          <span class="p-value">{{hit._source.first_seen}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.last_seen}}
+      <div>
+          <span class="p-key">Last Seen: </span>
+          <span class="p-value">{{hit._source.last_seen}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.domain}}
+      <div>
+          <span class="p-key">Domain: </span>
+          <span class="p-value">{{hit._source.domain}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.created_at}}
+      <div>
+          <span class="p-key">Created At: </span>
+          <span class="p-value">{{hit._source.created_at}}</span>
+      </div>
+    {{/if}}
+    {{#if hit._source.updated_at}}
+      <div>
+          <span class="p-key">Updated At: </span>
+          <span class="p-value">{{hit._source.updated_at}}</span>
+      </div>
+    {{/if}}
   {{/each}}
-
 {{/if}}
