@@ -1,6 +1,6 @@
 {
   "main": "./integration.js",
-  "name": "andariel-bot",
+  "name": "opencti",
   "version": "3.0.0-beta",
   "private": true,
   "dependencies": {

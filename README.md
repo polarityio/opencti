@@ -1,22 +1,21 @@
-# Polarity Advanced Intelligence LLC, Andariel Botnet/RDP API Integration
+# Polarity OpenCTI Integration
 
-The Polarity Andariel Botnet/RDP integration allows indicator searches across the Advanced Intelligence breach records dataset.
+Polarity's OpenCTI integration queries various indicator types against the OpenCTI GraphQL API.
 
-Check out a snapshot if the integration below: 
-![image](https://user-images.githubusercontent.com/22529325/97003834-14567a00-150a-11eb-8813-78ca15b20f41.png)
+Please see [OpenCTI](https://www.opencti.io/) for more information.
 
+## OpenCTI Integration Options
 
-## Integration Options 
+### OpenCTI URL
+Base URL for your OpenCTI instance including the schema (i.e. - https://<myopenctiserver)
 
-### Andriel API Key 
-An Api Key is needed in order to access Andriel Intelligence Botnet/RDP datasource. Please see https://www.advanced-intel.com/ fo more details on how to obtain an account. 
+### OpenCTI API Key
+Valid OpenCTI API Key found in your OpenCTI user account profile.
 
 ## Installation Instructions
-
 Installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
 
 ## Polarity
-
 Polarity is a memory-augmentation platform that improves and accelerates analyst decision making.  For more information about the Polarity platform please see:
 
 https://polarity.io/

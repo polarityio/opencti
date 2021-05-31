@@ -5,7 +5,7 @@ module.exports = {
    * @type String
    * @required
    */
-  name: 'Andariel Botnet/RDP Search',
+  name: 'OpenCTI',
   /**
    * The acronym that appears in the notification window when information from this integration
    * is displayed.  Note that the acronym is included as part of each "tag" in the summary information
@@ -15,7 +15,7 @@ module.exports = {
    * @type String
    * @required
    */
-  acronym: 'ADVBOT',
+  acronym: 'OCTI',
   /**
    * Description for this integration which is displayed in the Polarity integrations user interface
    *
@@ -23,8 +23,8 @@ module.exports = {
    * @optional
    */
   description:
-    'This integration queries IP and Domain entities against the Andariel Botnet/RDP dataset.',
-  entityTypes: ['ipv4', 'domain'],
+    'OpenCTI is an open source platform allowing organizations to store, organize, visualize and share their knowledge on cyber threats.',
+  entityTypes: ['ipv4', 'domain', 'hash', 'email'],
   styles: ['./styles/style.less'],
   /**
    * Provide custom component logic and template for rendering the integration details block.  If you do not
@@ -40,6 +40,14 @@ module.exports = {
     },
     template: {
       file: './templates/block.hbs'
+    }
+  },
+  summary: {
+    component: {
+      file: './components/summary.js'
+    },
+    template: {
+      file: './templates/summary.hbs'
     }
   },
   request: {
@@ -62,7 +70,7 @@ module.exports = {
     rejectUnauthorized: true
   },
   logging: {
-    level: 'info' //trace, debug, info, warn, error, fatal
+    level: 'trace' //trace, debug, info, warn, error, fatal
   },
   /**
    * Options that are displayed to the user/admin in the Polarity integration user-interface.  Should be structured
@@ -73,9 +81,18 @@ module.exports = {
    */
   options: [
     {
+      key: 'url',
+      name: 'OpenCTI URL',
+      description: 'The base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver)',
+      type: 'text',
+      default: '',
+      userCanEdit: false,
+      adminOnly: true
+    },
+    {
       key: 'apiKey',
-      name: 'Valid Andariel API Key',
-      description: 'Valid Andariel API Key',
+      name: 'Valid OpenCTI API Key',
+      description: 'Valid OpenCTI API Key',
       default: '',
       type: 'password',
       userCanEdit: true,

@@ -1,103 +1,107 @@
-{{#if details.hits.hits}}
-  <div>
-    <span class="p-title">{{fa-icon "bug" fixedWidth=true}} Search Result Detail</span>
-  </div>
-  {{#each details.hits.hits as |hit index|}}
-    {{#if (gt index 0)}}
-      <hr>
-    {{/if}}
-    <span class="p-title">Result #{{inc index}}:</span>
-    {{#if hit._index}}
-      {{#if (eq hit._index "logstash--uasrdp-accounts")}}
-        <div>
-            <span class="p-key">Index: </span>
-            <span class="p-value">RDP Underground Shop Sale</span>
-        </div>
-      {{/if}}
-      {{#if (eq hit._index "logstash-bazarbackdoor-main-victim-data")}}
-        <div>
-            <span class="p-key">Index: </span>
-            <span class="p-value">BazarLoader Malware Intrusion</span>
-        </div>
-      {{/if}}
-      {{#if (eq hit._index "logstash-trickbot-main-victim-data")}}
-        <div>
-            <span class="p-key">Index: </span>
-            <span class="p-value">Trickbot Main Botnet Intrusion</span>
-        </div>
-      {{/if}}
-      {{#if (eq hit._index "logstash-zloader-victim-data")}}
-        <div>
-            <span class="p-key">Index: </span>
-            <span class="p-value">ZLoader AKA Silent Night Botnet Intrusion</span>
-        </div>
-      {{/if}}
-    {{/if}}
-    {{#if hit._score}}
-      <div>
-          <span class="p-key">Severity Score: </span>
-          <span class="p-value">{{hit._score}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.geo_country}}
-      <div>
-          <span class="p-key">Geolocated Country: </span>
-          <span class="p-value">{{hit._source.geo_country}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.geo_city}}
-      <div>
-          <span class="p-key">Geolocated City: </span>
-          <span class="p-value">{{hit._source.geo_city}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.geo_isp}}
-      <div>
-          <span class="p-key">Geolocated ISP: </span>
-          <span class="p-value">{{hit._source.geo_isp}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.geo_domain}}
-      <div>
-          <span class="p-key">Geolocated Domain: </span>
-          <span class="p-value">{{hit._source.geo_domain}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.live}}
-      <div>
-          <span class="p-key">Is Live: </span>
-          <span class="p-value">{{hit._source.live}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.first_seen}}
-      <div>
-          <span class="p-key">First Seen: </span>
-          <span class="p-value">{{hit._source.first_seen}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.last_seen}}
-      <div>
-          <span class="p-key">Last Seen: </span>
-          <span class="p-value">{{hit._source.last_seen}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.domain}}
-      <div>
-          <span class="p-key">Domain: </span>
-          <span class="p-value">{{hit._source.domain}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.created_at}}
-      <div>
-          <span class="p-key">Created At: </span>
-          <span class="p-value">{{hit._source.created_at}}</span>
-      </div>
-    {{/if}}
-    {{#if hit._source.updated_at}}
-      <div>
-          <span class="p-key">Updated At: </span>
-          <span class="p-value">{{hit._source.updated_at}}</span>
-      </div>
-    {{/if}}
-  {{/each}}
-{{/if}}
+{{#each details.data.indicators.edges as |result index|}}
+  {{#if (gt index 0)}}
+    <hr />
+  {{/if}}
+  <span class='p-title'>{{fa-icon icon='bug' fixedWidth=true}}
+    Indicator #{{inc index}}
+    Details:</span>
+  {{#if result.node.name}}
+    <div>
+      <span class='p-key'>Indicator:</span>
+      <a
+        href='{{block.userOptions.url}}/dashboard/observations/indicators/{{result.node.id}}'
+        class='p-link'
+      >
+        {{result.node.name}}
+        {{fa-icon 'external-link-square' class='external-link-icon'}}</a>
+    </div>
+  {{/if}}
+  {{#if result.node.x_opencti_score}}
+    <div>
+      <span class='p-key'>Score:</span>
+      <span class='p-value'><b>{{result.node.x_opencti_score}}/100</b></span>
+    </div>
+  {{/if}}
+  {{#if result.node.confidence}}
+    <div>
+      <span class='p-key'>Confidence Level:</span>
+      <span class='p-value'><b>{{result.node.confidence}}</b></span>
+    </div>
+  {{/if}}
+  {{#if (eq result.node.x_opencti_detection false)}}
+    <div>
+      <span class='p-key'>Detection:</span>
+      <span class='p-value' style='color:red'><b>NO</b></span>
+    </div>
+  {{/if}}
+  {{#if (eq result.node.x_opencti_detection true)}}
+    <div>
+      <span class='p-key'>Detection:</span>
+      <span class='p-value' style='color:green'><b>YES</b></span>
+    </div>
+  {{/if}}
+  {{#if (eq result.node.revoked true)}}
+    <div>
+      <span class='p-key'>Revoked:</span>
+      <span class='p-value' style='color:red'><b>YES</b></span>
+    </div>
+  {{/if}}
+  {{#if (eq result.node.revoked false)}}
+    <div>
+      <span class='p-key'>Revoked:</span>
+      <span class='p-value' style='color:green'><b>NO</b></span>
+    </div>
+  {{/if}}
+  {{#if result.node.createdBy.name}}
+    <div>
+      <span class='p-key'>Author:</span>
+      <a
+        href='{{block.userOptions.url}}/dashboard/entities/organizations/{{result.node.createdBy.id}}'
+        class='p-link'
+      >
+        {{result.node.createdBy.name}}
+        {{fa-icon 'external-link-square' class='external-link-icon'}}</a>
+    </div>
+  {{/if}}
+  {{#if result.node.pattern_type}}
+    <div>
+      <span class='p-key'>Pattern Type:</span>
+      <span class='p-value'>{{result.node.pattern_type}}</span>
+    </div>
+  {{/if}}
+  {{#if result.node.pattern_version}}
+    <div>
+      <span class='p-key'>Pattern Version:</span>
+      <span class='p-value'>{{result.node.pattern_version}}</span>
+    </div>
+  {{/if}}
+  {{#if result.node.pattern}}
+    <div>
+      <span class='p-key'>Pattern:</span>
+      <span class='p-value'>{{result.node.pattern}}</span>
+    </div>
+  {{/if}}
+  {{#if result.node.valid_from}}
+    <div>
+      <span class='p-key'>Valid From:</span>
+      <span class='p-value'>{{result.node.valid_from}}</span>
+    </div>
+  {{/if}}
+  {{#if result.node.valid_until}}
+    <div>
+      <span class='p-key'>Valid Until:</span>
+      <span class='p-value'>{{result.node.valid_until}}</span>
+    </div>
+  {{/if}}
+  {{#if result.node.objectLabel.edges}}
+    <div class='p-title'>
+      {{fa-icon 'tag' fixedWidth=true}}
+      Labels
+    </div>
+    <div class='tags'>
+      {{#each result.node.objectLabel.edges as |label|}}
+        <span class='tag'>{{label.node.value}}</span>
+      {{/each}}
+    </div>
+  {{/if}}
+{{/each}}
