@@ -3,6 +3,7 @@
 Polarity's OpenCTI integration queries various indicator types against the OpenCTI GraphQL API.
 
 Please see [OpenCTI](https://www.opencti.io/) for more information.
+<img width="400" alt="Integration Example" src="./assets/opencti.png">
 
 ## OpenCTI Integration Options
 
