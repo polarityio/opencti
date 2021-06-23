@@ -1,4 +1,150 @@
-const query =
-  '\n            query Indicators($filters: [IndicatorsFiltering], $search: String, $first: Int, $after: ID, $orderBy: IndicatorsOrdering, $orderMode: OrderingMode) {\n                indicators(filters: $filters, search: $search, first: $first, after: $after, orderBy: $orderBy, orderMode: $orderMode) {\n                    edges {\n                        node {\n                            \n            id\n            standard_id\n            entity_type\n            parent_types\n            spec_version\n            created_at\n            updated_at\n            createdBy {\n                ... on Identity {\n                    id\n                    standard_id\n                    entity_type\n                    parent_types\n                    spec_version\n                    name\n                    description\n                    roles\n                    contact_information\n                    x_opencti_aliases\n                    created\n                    modified\n                    objectLabel {\n                        edges {\n                            node {\n                                id\n                                value\n                                color\n                            }\n                        }\n                    }\n                }\n                ... on Organization {\n                    x_opencti_organization_type\n                    x_opencti_reliability\n                }\n                ... on Individual {\n                    x_opencti_firstname\n                    x_opencti_lastname\n                }\n            }\n            objectMarking {\n                edges {\n                    node {\n                        id\n                        standard_id\n                        entity_type\n                        definition_type\n                        definition\n                        created\n                        modified\n                        x_opencti_order\n                        x_opencti_color\n                    }\n                }\n            }\n            objectLabel {\n                edges {\n                    node {\n                        id\n                        value\n                        color\n                    }\n                }\n            }\n            externalReferences {\n                edges {\n                    node {\n                        id\n                        standard_id\n                        entity_type\n                        source_name\n                        description\n                        url\n                        hash\n                        external_id\n                        created\n                        modified\n                    }\n                }\n            }\n            revoked\n            confidence\n            created\n            modified\n            pattern_type\n            pattern_version\n            pattern\n            name\n            description\n            indicator_types\n            valid_from\n            valid_until\n            x_opencti_score\n            x_opencti_detection\n            x_opencti_main_observable_type\n            x_mitre_platforms\n            observables {\n                edges {\n                    node {\n                        id\n                        observable_value\n                    }\n                }\n            }\n            killChainPhases {\n                edges {\n                    node {\n                        id\n                        standard_id\n                        entity_type\n                        kill_chain_name\n                        phase_name\n                        x_opencti_order\n                        created\n                        modified\n                    }\n                }\n            }\n        \n                        }\n                    }\n                    pageInfo {\n                        startCursor\n                        endCursor\n                        hasNextPage\n                        hasPreviousPage\n                        globalCount\n                    }\n                }\n            }\n        ';
+const query =`
+query Indicators(
+  $filters: [IndicatorsFiltering],
+  $search: String, $first: Int,
+  $after: ID,
+  $orderBy: IndicatorsOrdering,
+  $orderMode: OrderingMode
+) {
+  indicators(
+    filters: $filters,
+    search: $search,
+    first: $first,
+    after: $after,
+    orderBy: $orderBy,
+    orderMode: $orderMode
+  ) {
+    edges {
+      node {
+        id
+        standard_id
+        entity_type
+        parent_types
+        spec_version
+        created_at
+        updated_at
+        createdBy {
+          ... on Identity {
+            id
+            standard_id
+            entity_type
+            parent_types
+            spec_version
+            name
+            description
+            roles
+            contact_information
+            x_opencti_aliases
+            created
+            modified
+            objectLabel {
+              edges {
+                node {
+                  id
+                  value
+                  color
+                }
+              }
+            }
+          }
+          ... on Organization {
+            x_opencti_organization_type
+            x_opencti_reliability
+          }
+          ... on Individual {
+            x_opencti_firstname
+            x_opencti_lastname
+          }
+        }
+        objectMarking {
+          edges {
+            node {
+              id
+              standard_id
+              entity_type
+              definition_type
+              definition
+              created
+              modified
+              x_opencti_order
+              x_opencti_color
+            }
+          }
+        }
+        objectLabel {
+          edges {
+            node {
+              id
+              value
+              color
+            }
+          }
+        }
+        externalReferences {
+          edges {
+            node {
+              id
+              standard_id
+              entity_type
+              source_name
+              description
+              url
+              hash
+              external_id
+              created
+              modified
+            }
+          }
+        }
+        revoked
+        confidence
+        created
+        modified
+        pattern_type
+        pattern_version
+        pattern
+        name
+        description
+        indicator_types
+        valid_from
+        valid_until
+        x_opencti_score
+        x_opencti_detection
+        x_opencti_main_observable_type
+        x_mitre_platforms
+        observables {
+          edges {
+            node {
+              id
+              observable_value
+            }
+          }
+        }
+        killChainPhases {
+          edges {
+            node {
+              id
+              standard_id
+              entity_type
+              kill_chain_name
+              phase_name
+              x_opencti_order
+              created
+              modified
+            }
+          }
+        }
+      }
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      globalCount
+    }
+  }
+}
+`;
 
 module.exports = query;

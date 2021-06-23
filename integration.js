@@ -71,7 +71,7 @@ function doLookup(entities, options, cb) {
 
         if (processedResult.error) {
           done(processedResult);
-          retur;
+          return;
         }
 
         done(null, processedResult);

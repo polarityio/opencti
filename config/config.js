@@ -52,16 +52,12 @@ module.exports = {
   },
   request: {
     // Provide the path to your certFile. Leave an empty string to ignore this option.
-    // Relative paths are relative to the Urlhaus integration's root directory
     cert: '',
     // Provide the path to your private key. Leave an empty string to ignore this option.
-    // Relative paths are relative to the Urlhaus integration's root directory
     key: '',
     // Provide the key passphrase if required.  Leave an empty string to ignore this option.
-    // Relative paths are relative to the Urlhaus integration's root directory
     passphrase: '',
     // Provide the Certificate Authority. Leave an empty string to ignore this option.
-    // Relative paths are relative to the Urlhaus integration's root directory
     ca: '',
     // An HTTP proxy to be used. Supports proxy Auth with Basic Auth, identical to support for
     // the url parameter (by embedding the auth info in the uri)
@@ -83,7 +79,7 @@ module.exports = {
     {
       key: 'url',
       name: 'OpenCTI URL',
-      description: 'The base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver)',
+      description: 'The Base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver)',
       type: 'text',
       default: '',
       userCanEdit: false,

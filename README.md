@@ -2,14 +2,14 @@
 
 Polarity's OpenCTI integration queries various indicator types against the OpenCTI GraphQL API.
 
-Please see [OpenCTI](https://www.opencti.io/) for more information.
-|---|
 <img width="400" alt="Integration Example" src="./assets/opencti.png">
+
+Please see [OpenCTI](https://www.opencti.io/) for more information.
 
 ## OpenCTI Integration Options
 
 ### OpenCTI URL
-Base URL for your OpenCTI instance including the schema (i.e. - https://<myopenctiserver)
+The Base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver)
 
 ### OpenCTI API Key
 Valid OpenCTI API Key found in your OpenCTI user account profile.
