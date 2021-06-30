@@ -4,6 +4,7 @@ const request = require('request');
 const config = require('./config/config');
 const async = require('async');
 const fs = require('fs');
+const fp = require('lodash/fp');
 const query = require('./query');
 
 let Logger;
@@ -54,10 +55,10 @@ function doLookup(entities, options, cb) {
       method: 'POST',
       uri: `${options.url}/graphql`,
       headers: {
-        Authorization: 'Bearer ' + options.apiKey
+        Authorization: 'Bearer '
       },
       body: {
-        query,
+        query: query,
         variables: { search: entity.value }
       },
       json: true
@@ -67,7 +68,7 @@ function doLookup(entities, options, cb) {
 
     tasks.push(function (done) {
       requestWithDefaults(requestOptions, function (error, res, body) {
-        let processedResult = handleRestError(error, entity, res, body);
+        let processedResult = handleRestError(entity, res, body);
 
         if (processedResult.error) {
           done(processedResult);
@@ -85,26 +86,20 @@ function doLookup(entities, options, cb) {
       cb(err);
       return;
     }
-  
+
     results.forEach((result) => {
-      if (
-        !result.body ||
-        result.body === null ||
-        !result.body.data.indicators ||
-        result.body.data.indicators.edges.length === 0 ||
-        result.body.data.indicators.pageInfo.globalCount === 0
-      ) {
+      if (fp.get('data.body.data', result)) {
         lookupResults.push({
-          entity: result.entity,
-          data: null
+          entity: result.data.entity,
+          data: {
+            summary: [],
+            details: result.data.body
+          }
         });
       } else {
         lookupResults.push({
-          entity: result.entity,
-          data: {
-            summary: [],
-            details: result.body
-          }
+          entity: result.body.entity,
+          data: null
         });
       }
     });
@@ -114,47 +109,57 @@ function doLookup(entities, options, cb) {
   });
 }
 
-function handleRestError(error, entity, res, body) {
-  let result;
-
-  if (error) {
+const handleRestError = (entity, res, body) => {
+  if (res.statusCode === 404) {
     return {
-      error: error,
-      detail: 'HTTP Request Error'
+      statusCode: res.statusCode,
+      body: {
+        errors: [res.error],
+        data: null,
+        entity
+      }
     };
   }
 
-  if (res.statusCode === 200 && body) {
-    // we got data!
-    result = {
-      entity: entity,
-      body: body
-    };
-  } else if (res.statusCode === 404) {
-    result = {
-      error: 'Not Found',
-      detail: body
-    };
-  } else if (res.statusCode === 400) {
-    result = {
-      error: 'Bad Request',
-      detail: body
-    };
-  } else if (res.statusCode === 429) {
-    result = {
-      error: 'Rate Limit Exceeded',
-      detail: body
-    };
-  } else {
-    result = {
-      error: 'Unexpected Error',
-      statusCode: res ? res.statusCode : 'Unknown',
-      detail: 'An unexpected error occurred'
-    };
+  //handle gql errors
+  if (fp.get('body.errors.length', res)) {
+    const error = res.body.errors[0];
+    Logger.trace({ IN_ERR_HANDLER: error });
+    const status = error.data.http_status;
+    switch (status) {
+      case 401:
+        return {
+          error: error.message,
+          body
+        };
+      case 400:
+        return {
+          error: error.message,
+          body
+        };
+      case 429:
+        return {
+          error: error.message,
+          body: `Rate Limit Exceeded`
+        };
+      default:
+        return {
+          error: body,
+          body: `Unexpected Gql Status Code ${res.statusCode} received`
+        };
+    }
   }
 
-  return result;
-}
+  if (res.body.data.indicators !== null) {
+    return {
+      error: null,
+      data: {
+        entity,
+        body
+      }
+    };
+  }
+};
 
 function validateOption(errors, options, optionName, errMessage) {
   if (
