@@ -124,8 +124,8 @@ const handleRestError = (entity, res, body) => {
   //handle gql errors
   if (fp.get('body.errors.length', res)) {
     const error = res.body.errors[0];
-    Logger.trace({ IN_ERR_HANDLER: error });
     const status = error.data.http_status;
+
     switch (status) {
       case 401:
         return {
