@@ -84,13 +84,21 @@
   {{#if result.node.valid_from}}
     <div>
       <span class='p-key'>Valid From:</span>
-      <span class='p-value'>{{result.node.valid_from}}</span>
+      <span class='p-value'>{{moment-format
+          result.node.valid_from
+          'MM/DD/YYYY HH:mm:ss'
+          timeZone=timezone
+        }}</span>
     </div>
   {{/if}}
   {{#if result.node.valid_until}}
     <div>
       <span class='p-key'>Valid Until:</span>
-      <span class='p-value'>{{result.node.valid_until}}</span>
+      <span class='p-value'>{{moment-format
+          result.node.valid_until
+          'MM/DD/YYYY HH:mm:ss'
+          timeZone=timezone
+        }}</span>
     </div>
   {{/if}}
   {{#if result.node.objectLabel.edges}}
