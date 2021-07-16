@@ -88,19 +88,28 @@ function doLookup(entities, options, cb) {
     }
 
     results.forEach((result) => {
-      if (fp.get('data.body.data', result)) {
-        lookupResults.push({
-          entity: result.data.entity,
-          data: {
-            summary: [],
-            details: result.data.body
-          }
-        });
-      } else {
-        lookupResults.push({
-          entity: result.body.entity,
-          data: null
-        });
+      if (
+        !result.body ||
+        result.body === null ||
+        !result.body.data.indicators ||
+        result.body.data.indicators.edges.length === 0 ||
+        result.body.data.indicators.pageInfo.globalCount === 0
+      ) {
+        if (fp.get('data.body.data', result)) {
+          Logger.trace({ RESULT: result });
+          lookupResults.push({
+            entity: result.data.entity,
+            data: {
+              summary: [],
+              details: result.data.body
+            }
+          });
+        } else {
+          lookupResults.push({
+            entity: result.body.entity,
+            data: null
+          });
+        }
       }
     });
 
