@@ -89,11 +89,10 @@ function doLookup(entities, options, cb) {
 
     results.forEach((result) => {
       if (
-        !result.body ||
-        result.body === null ||
-        !result.body.data.indicators ||
-        result.body.data.indicators.edges.length === 0 ||
-        result.body.data.indicators.pageInfo.globalCount === 0
+        !fp.get('body', result) ||
+        !fp.get('body.data.indicators', result) ||
+        fp.get('body.data.indicators.edges.length', result) === 0 ||
+        fp.get('body.data.indicators.pageInfo.globalCount', result) === 0 
       ) {
         if (fp.get('data.body.data', result)) {
           Logger.trace({ RESULT: result });
