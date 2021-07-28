@@ -55,7 +55,7 @@ function doLookup(entities, options, cb) {
       method: 'POST',
       uri: `${options.url}/graphql`,
       headers: {
-        Authorization: 'Bearer '
+        Authorization: 'Bearer ' + options.apiKey
       },
       body: {
         query: query,
