@@ -31,13 +31,13 @@
   {{#if (eq result.node.x_opencti_detection false)}}
     <div>
       <span class='p-key'>Detection:</span>
-      <span class='p-value' style='color:red'><b>NO</b></span>
+      <span class='p-value' style='color:green'><b>NO</b></span>
     </div>
   {{/if}}
   {{#if (eq result.node.x_opencti_detection true)}}
     <div>
       <span class='p-key'>Detection:</span>
-      <span class='p-value' style='color:green'><b>YES</b></span>
+      <span class='p-value' style='color:red'><b>YES</b></span>
     </div>
   {{/if}}
   {{#if (eq result.node.revoked true)}}
