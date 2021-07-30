@@ -42,14 +42,6 @@ module.exports = {
       file: './templates/block.hbs'
     }
   },
-  summary: {
-    component: {
-      file: './components/summary.js'
-    },
-    template: {
-      file: './templates/summary.hbs'
-    }
-  },
   request: {
     // Provide the path to your certFile. Leave an empty string to ignore this option.
     cert: '',
@@ -79,7 +71,7 @@ module.exports = {
     {
       key: 'url',
       name: 'OpenCTI URL',
-      description: 'The Base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver)',
+      description: 'The Base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver). Option must be set to "Users can view only"',
       type: 'text',
       default: '',
       userCanEdit: false,

@@ -68,11 +68,11 @@ function doLookup(entities, options, cb) {
 
     tasks.push(function (done) {
       requestWithDefaults(requestOptions, function (error, res, body) {
-        if(error){
+        if (error) {
           return done({
             detail: 'HTTP error encoutered',
             error
-          })
+          });
         }
 
         let processedResult = handleRestError(entity, res, body);
@@ -99,14 +99,14 @@ function doLookup(entities, options, cb) {
         !fp.get('body', result) ||
         !fp.get('body.data.indicators', result) ||
         fp.get('body.data.indicators.edges.length', result) === 0 ||
-        fp.get('body.data.indicators.pageInfo.globalCount', result) === 0 
+        fp.get('body.data.indicators.pageInfo.globalCount', result) === 0
       ) {
         if (fp.get('data.body.data', result)) {
           Logger.trace({ RESULT: result });
           lookupResults.push({
             entity: result.data.entity,
             data: {
-              summary: [],
+              summary: getSummaryTags(result.data.body),
               details: result.data.body
             }
           });
@@ -122,6 +122,24 @@ function doLookup(entities, options, cb) {
     Logger.debug({ lookupResults }, 'Results');
     cb(null, lookupResults);
   });
+}
+
+function getSummaryTags(body) {
+  const tags = [];
+  let maxScore = 0;
+  let confidence = 'NA';
+  const globalCount = fp.get('data.indicators.pageInfo.globalCount', body);
+  const edges = fp.get('data.indicators.edges', body, []);
+  edges.forEach((edge) => {
+    const score = fp.get('node.x_opencti_score', edge, 0);
+    if(score > maxScore){
+      maxScore = score;
+      confidence = fp.get('node.confidence', edge, 'N/A');
+    }
+  })
+  tags.push(`Indicator Count: ${globalCount}`);
+  tags.push(`${globalCount > 1 ? 'Max Score: ' : 'Score: '} ${maxScore} / Confidence: ${confidence}`);
+  return tags;
 }
 
 const handleRestError = (entity, res, body) => {
@@ -164,7 +182,9 @@ const handleRestError = (entity, res, body) => {
         return {
           error,
           body,
-          detail: error.message ? error.message : `Unexpected Gql Status Code ${res.statusCode} received`
+          detail: error.message
+            ? error.message
+            : `Unexpected Gql Status Code ${res.statusCode} received`
         };
     }
   }
