@@ -70,7 +70,7 @@ function doLookup(entities, options, cb) {
       requestWithDefaults(requestOptions, function (error, res, body) {
         if (error) {
           return done({
-            detail: 'HTTP error encoutered',
+            detail: 'HTTP error encountered',
             error
           });
         }
