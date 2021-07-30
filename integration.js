@@ -68,6 +68,13 @@ function doLookup(entities, options, cb) {
 
     tasks.push(function (done) {
       requestWithDefaults(requestOptions, function (error, res, body) {
+        if(error){
+          return done({
+            detail: 'HTTP error encoutered',
+            error
+          })
+        }
+
         let processedResult = handleRestError(entity, res, body);
 
         if (processedResult.error) {
@@ -137,23 +144,27 @@ const handleRestError = (entity, res, body) => {
     switch (status) {
       case 401:
         return {
-          error: error.message,
+          error,
+          detail: error.message,
           body
         };
       case 400:
         return {
-          error: error.message,
+          error,
+          detail: error.message,
           body
         };
       case 429:
         return {
-          error: error.message,
-          body: `Rate Limit Exceeded`
+          error,
+          detail: error.message,
+          body
         };
       default:
         return {
-          error: body,
-          body: `Unexpected Gql Status Code ${res.statusCode} received`
+          error,
+          body,
+          detail: error.message ? error.message : `Unexpected Gql Status Code ${res.statusCode} received`
         };
     }
   }
