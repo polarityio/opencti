@@ -52,6 +52,12 @@
       <span class='p-value' style='color:green'><b>NO</b></span>
     </div>
   {{/if}}
+  {{#if result.node.description}}
+    <div>
+      <span class='p-key'>Description:</span>
+      <span class='p-value'>{{result.node.description}}</span>
+    </div>
+  {{/if}}
   {{#if result.node.createdBy.name}}
     <div>
       <span class='p-key'>Author:</span>
