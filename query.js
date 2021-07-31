@@ -16,6 +16,7 @@ const query = `query Indicators(
   ) {
     edges {
       node {
+        id
         revoked
         confidence
         pattern_type
@@ -27,6 +28,22 @@ const query = `query Indicators(
         valid_until
         x_opencti_score
         x_opencti_detection
+        objectLabel {
+          edges {
+            node {
+              id
+              value
+              color
+            }
+          }
+        }
+        createdBy {
+          ... on Identity {
+            id
+            entity_type
+            name
+          }
+        }
       }
     }
     pageInfo {
