@@ -9,7 +9,7 @@ Please see [OpenCTI](https://www.opencti.io/) for more information.
 ## OpenCTI Integration Options
 
 ### OpenCTI URL
-The Base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver)
+The Base URL for your OpenCTI instance including the scheme. (i.e. - https://myopenctiserver). Option must be set to "Users can view only".
 
 ### OpenCTI API Key
 Valid OpenCTI API Key found in your OpenCTI user account profile.

@@ -71,7 +71,7 @@ module.exports = {
     {
       key: 'url',
       name: 'OpenCTI URL',
-      description: 'The Base URL for your OpenCTI instance including the schema. (i.e. - https://myopenctiserver). Option must be set to "Users can view only"',
+      description: 'The Base URL for your OpenCTI instance including the scheme. (i.e. - https://myopenctiserver). Option must be set to "Users can view only"',
       type: 'text',
       default: '',
       userCanEdit: false,
