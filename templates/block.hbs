@@ -1,3 +1,8 @@
+{{#if (gt details.data.indicators.pageInfo.globalCount 5)}}
+    <div>
+        <span class="p-footnote">Showing first 5 of {{details.data.indicators.pageInfo.globalCount}} results</span>
+    </div>
+{{/if}}
 {{#each details.data.indicators.edges as |result index|}}
   {{#if (gt index 0)}}
     <hr />
