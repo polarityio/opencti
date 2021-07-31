@@ -9,7 +9,7 @@
     <div>
       <span class='p-key'>Indicator:</span>
       <a
-        href='{{block.userOptions.url}}/dashboard/observations/indicators/{{result.node.id}}'
+        href='{{webUrl}}dashboard/observations/indicators/{{result.node.id}}'
         class='p-link'
       >
         {{result.node.name}}
@@ -62,13 +62,14 @@
     <div>
       <span class='p-key'>Author:</span>
       <a
-        href='{{block.userOptions.url}}/dashboard/entities/organizations/{{result.node.createdBy.id}}'
+        href='{{webUrl}}dashboard/entities/organizations/{{result.node.createdBy.id}}'
         class='p-link'
       >
-        {{result.node.createdBy.name}}
+        {{result.node.createdBy.name}} ({{result.node.createdBy.entity_type}})
         {{fa-icon 'external-link-square' class='external-link-icon'}}</a>
     </div>
   {{/if}}
+
   {{#if result.node.pattern_type}}
     <div>
       <span class='p-key'>Pattern Type:</span>
@@ -114,7 +115,7 @@
     </div>
     <div class='tags'>
       {{#each result.node.objectLabel.edges as |label|}}
-        <span class='tag'>{{label.node.value}}</span>
+        <span class='tag' style="color: {{label.node.color}}; border-color: {{label.node.color}}; background-color: {{label.node.color}}10;">{{label.node.value}}</span>
       {{/each}}
     </div>
   {{/if}}
