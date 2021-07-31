@@ -4,6 +4,7 @@ const request = require('request');
 const config = require('./config/config');
 const async = require('async');
 const fs = require('fs');
+const fp = require('lodash/fp');
 const query = require('./query');
 
 let Logger;
@@ -57,8 +58,13 @@ function doLookup(entities, options, cb) {
         Authorization: 'Bearer ' + options.apiKey
       },
       body: {
-        query,
-        variables: { search: entity.value }
+        query: query,
+        variables: {
+          search: entity.value,
+          first: 5,
+          orderBy: 'valid_until',
+          orderMode: 'desc'
+        }
       },
       json: true
     };
@@ -67,11 +73,18 @@ function doLookup(entities, options, cb) {
 
     tasks.push(function (done) {
       requestWithDefaults(requestOptions, function (error, res, body) {
-        let processedResult = handleRestError(error, entity, res, body);
+        if (error) {
+          return done({
+            detail: 'HTTP error encountered',
+            error
+          });
+        }
+
+        let processedResult = handleRestError(entity, res, body);
 
         if (processedResult.error) {
           done(processedResult);
-          retur;
+          return;
         }
 
         done(null, processedResult);
@@ -85,27 +98,29 @@ function doLookup(entities, options, cb) {
       cb(err);
       return;
     }
-  
+
     results.forEach((result) => {
       if (
-        !result.body ||
-        result.body === null ||
-        !result.body.data.indicators ||
-        result.body.data.indicators.edges.length === 0 ||
-        result.body.data.indicators.pageInfo.globalCount === 0
+        !fp.get('body', result) ||
+        !fp.get('body.data.indicators', result) ||
+        fp.get('body.data.indicators.edges.length', result) === 0 ||
+        fp.get('body.data.indicators.pageInfo.globalCount', result) === 0
       ) {
-        lookupResults.push({
-          entity: result.entity,
-          data: null
-        });
-      } else {
-        lookupResults.push({
-          entity: result.entity,
-          data: {
-            summary: [],
-            details: result.body
-          }
-        });
+        if (fp.get('data.body.data', result)) {
+          Logger.trace({ RESULT: result });
+          lookupResults.push({
+            entity: result.data.entity,
+            data: {
+              summary: getSummaryTags(result.data.body),
+              details: result.data.body
+            }
+          });
+        } else {
+          lookupResults.push({
+            entity: result.body.entity,
+            data: null
+          });
+        }
       }
     });
 
@@ -114,47 +129,87 @@ function doLookup(entities, options, cb) {
   });
 }
 
-function handleRestError(error, entity, res, body) {
-  let result;
-
-  if (error) {
-    return {
-      error: error,
-      detail: 'HTTP Request Error'
-    };
-  }
-
-  if (res.statusCode === 200 && body) {
-    // we got data!
-    result = {
-      entity: entity,
-      body: body
-    };
-  } else if (res.statusCode === 404) {
-    result = {
-      error: 'Not Found',
-      detail: body
-    };
-  } else if (res.statusCode === 400) {
-    result = {
-      error: 'Bad Request',
-      detail: body
-    };
-  } else if (res.statusCode === 429) {
-    result = {
-      error: 'Rate Limit Exceeded',
-      detail: body
-    };
-  } else {
-    result = {
-      error: 'Unexpected Error',
-      statusCode: res ? res.statusCode : 'Unknown',
-      detail: 'An unexpected error occurred'
-    };
-  }
-
-  return result;
+function getSummaryTags(body) {
+  const tags = [];
+  let maxScore = 0;
+  let confidence = 'NA';
+  const globalCount = fp.get('data.indicators.pageInfo.globalCount', body);
+  const edges = fp.get('data.indicators.edges', body, []);
+  edges.forEach((edge) => {
+    const score = fp.get('node.x_opencti_score', edge, 0);
+    if (score > maxScore) {
+      maxScore = score;
+      confidence = fp.get('node.confidence', edge, 'N/A');
+    }
+  });
+  tags.push(`Indicator Count: ${globalCount}`);
+  tags.push(
+    `${
+      globalCount > 1 ? 'Max Score: ' : 'Score: '
+    } ${maxScore} / Confidence: ${confidence}`
+  );
+  return tags;
 }
+
+const handleRestError = (entity, res, body) => {
+  if (res.statusCode === 404) {
+    return {
+      statusCode: res.statusCode,
+      body: {
+        errors: [res.error],
+        data: null,
+        entity
+      }
+    };
+  }
+
+  Logger.trace({ body }, 'Response Body');
+
+  //handle gql errors
+  if (fp.get('body.errors.length', res)) {
+    const error = res.body.errors[0];
+    const status = res.statusCode;
+
+    switch (status) {
+      case 401:
+        return {
+          error,
+          detail: error.message,
+          body
+        };
+      case 400:
+        return {
+          error,
+          detail: error.message,
+          body
+        };
+      case 429:
+        return {
+          error,
+          detail: error.message,
+          body
+        };
+      default:
+        return {
+          error,
+          body,
+          detail: error.message
+            ? error.message
+            : `Unexpected Gql Status Code ${res.statusCode} received`
+        };
+    }
+  }
+
+  if (res.body.data.indicators !== null) {
+    return {
+      error: null,
+      data: {
+        entity,
+        body
+      }
+    };
+  }
+};
 
 function validateOption(errors, options, optionName, errMessage) {
   if (

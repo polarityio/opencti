@@ -1,3 +1,8 @@
+{{#if (gt details.data.indicators.pageInfo.globalCount 5)}}
+    <div>
+        <span class="p-footnote">Showing first 5 of {{details.data.indicators.pageInfo.globalCount}} results</span>
+    </div>
+{{/if}}
 {{#each details.data.indicators.edges as |result index|}}
   {{#if (gt index 0)}}
     <hr />
@@ -9,7 +14,7 @@
     <div>
       <span class='p-key'>Indicator:</span>
       <a
-        href='{{block.userOptions.url}}/dashboard/observations/indicators/{{result.node.id}}'
+        href='{{webUrl}}dashboard/observations/indicators/{{result.node.id}}'
         class='p-link'
       >
         {{result.node.name}}
@@ -31,13 +36,13 @@
   {{#if (eq result.node.x_opencti_detection false)}}
     <div>
       <span class='p-key'>Detection:</span>
-      <span class='p-value' style='color:red'><b>NO</b></span>
+      <span class='p-value' style='color:green'><b>NO</b></span>
     </div>
   {{/if}}
   {{#if (eq result.node.x_opencti_detection true)}}
     <div>
       <span class='p-key'>Detection:</span>
-      <span class='p-value' style='color:green'><b>YES</b></span>
+      <span class='p-value' style='color:red'><b>YES</b></span>
     </div>
   {{/if}}
   {{#if (eq result.node.revoked true)}}
@@ -52,17 +57,24 @@
       <span class='p-value' style='color:green'><b>NO</b></span>
     </div>
   {{/if}}
+  {{#if result.node.description}}
+    <div>
+      <span class='p-key'>Description:</span>
+      <span class='p-value'>{{result.node.description}}</span>
+    </div>
+  {{/if}}
   {{#if result.node.createdBy.name}}
     <div>
       <span class='p-key'>Author:</span>
       <a
-        href='{{block.userOptions.url}}/dashboard/entities/organizations/{{result.node.createdBy.id}}'
+        href='{{webUrl}}dashboard/entities/organizations/{{result.node.createdBy.id}}'
         class='p-link'
       >
-        {{result.node.createdBy.name}}
+        {{result.node.createdBy.name}} ({{result.node.createdBy.entity_type}})
         {{fa-icon 'external-link-square' class='external-link-icon'}}</a>
     </div>
   {{/if}}
+
   {{#if result.node.pattern_type}}
     <div>
       <span class='p-key'>Pattern Type:</span>
@@ -84,13 +96,21 @@
   {{#if result.node.valid_from}}
     <div>
       <span class='p-key'>Valid From:</span>
-      <span class='p-value'>{{result.node.valid_from}}</span>
+      <span class='p-value'>{{moment-format
+          result.node.valid_from
+          'MM/DD/YYYY HH:mm:ss'
+          timeZone=timezone
+        }}</span>
     </div>
   {{/if}}
   {{#if result.node.valid_until}}
     <div>
       <span class='p-key'>Valid Until:</span>
-      <span class='p-value'>{{result.node.valid_until}}</span>
+      <span class='p-value'>{{moment-format
+          result.node.valid_until
+          'MM/DD/YYYY HH:mm:ss'
+          timeZone=timezone
+        }}</span>
     </div>
   {{/if}}
   {{#if result.node.objectLabel.edges}}
@@ -100,7 +120,7 @@
     </div>
     <div class='tags'>
       {{#each result.node.objectLabel.edges as |label|}}
-        <span class='tag'>{{label.node.value}}</span>
+        <span class='tag' style="color: {{label.node.color}}; border-color: {{label.node.color}}; background-color: {{label.node.color}}10;">{{label.node.value}}</span>
       {{/each}}
     </div>
   {{/if}}
