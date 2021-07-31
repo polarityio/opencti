@@ -59,7 +59,12 @@ function doLookup(entities, options, cb) {
       },
       body: {
         query: query,
-        variables: { search: entity.value, first: 5 }
+        variables: {
+          search: entity.value,
+          first: 5,
+          orderBy: 'valid_until',
+          orderMode: 'desc'
+        }
       },
       json: true
     };
