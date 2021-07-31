@@ -59,7 +59,7 @@ function doLookup(entities, options, cb) {
       },
       body: {
         query: query,
-        variables: { search: entity.value }
+        variables: { search: entity.value, first: 5 }
       },
       json: true
     };
@@ -132,13 +132,17 @@ function getSummaryTags(body) {
   const edges = fp.get('data.indicators.edges', body, []);
   edges.forEach((edge) => {
     const score = fp.get('node.x_opencti_score', edge, 0);
-    if(score > maxScore){
+    if (score > maxScore) {
       maxScore = score;
       confidence = fp.get('node.confidence', edge, 'N/A');
     }
-  })
+  });
   tags.push(`Indicator Count: ${globalCount}`);
-  tags.push(`${globalCount > 1 ? 'Max Score: ' : 'Score: '} ${maxScore} / Confidence: ${confidence}`);
+  tags.push(
+    `${
+      globalCount > 1 ? 'Max Score: ' : 'Score: '
+    } ${maxScore} / Confidence: ${confidence}`
+  );
   return tags;
 }
 
@@ -154,7 +158,7 @@ const handleRestError = (entity, res, body) => {
     };
   }
 
-  Logger.trace({body}, 'Response Body');
+  Logger.trace({ body }, 'Response Body');
 
   //handle gql errors
   if (fp.get('body.errors.length', res)) {
