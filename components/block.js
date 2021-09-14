@@ -3,5 +3,8 @@ polarity.export = PolarityComponent.extend({
     webUrl: Ember.computed('block.userOptions.url', function(){
         const url = this.get('block.userOptions.url');
         return url.endsWith('/') ? url : `${url}/`;
+    }),
+    timezone: Ember.computed("Intl", function () {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
     })
 });
