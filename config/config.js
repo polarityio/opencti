@@ -83,8 +83,8 @@ module.exports = {
       description: 'Valid OpenCTI API Key',
       default: '',
       type: 'password',
-      userCanEdit: true,
-      adminOnly: false
+      userCanEdit: false,
+      adminOnly: true
     }
   ]
 };

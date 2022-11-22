@@ -1,9 +1,10 @@
 'use strict';
 
-const request = require('request');
+const request = require('postman-request');
 const config = require('./config/config');
 const async = require('async');
 const fs = require('fs');
+const _ = require('lodash');
 const fp = require('lodash/fp');
 const query = require('./query');
 
@@ -80,7 +81,7 @@ function doLookup(entities, options, cb) {
           });
         }
 
-        let processedResult = handleRestError(entity, res, body);
+        let processedResult = handleRestError(entity, res, body, options);
 
         if (processedResult.error) {
           done(processedResult);
@@ -101,26 +102,22 @@ function doLookup(entities, options, cb) {
 
     results.forEach((result) => {
       if (
-        !fp.get('body', result) ||
-        !fp.get('body.data.indicators', result) ||
-        fp.get('body.data.indicators.edges.length', result) === 0 ||
-        fp.get('body.data.indicators.pageInfo.globalCount', result) === 0
+        !_.get(result, 'data.body') ||
+        _.get(result, 'data.body.data.indicators.edges.length') === 0
       ) {
-        if (fp.get('data.body.data', result)) {
-          Logger.trace({ RESULT: result });
-          lookupResults.push({
-            entity: result.data.entity,
-            data: {
-              summary: getSummaryTags(result.data.body),
-              details: result.data.body
-            }
-          });
-        } else {
-          lookupResults.push({
-            entity: result.body.entity,
-            data: null
-          });
-        }
+        lookupResults.push({
+          entity: result.data.entity,
+          data: null
+        });
+      } else {
+        Logger.trace({ RESULT: result });
+        lookupResults.push({
+          entity: result.data.entity,
+          data: {
+            summary: getSummaryTags(result.data.body),
+            details: result.data.body
+          }
+        });
       }
     });
 
@@ -151,62 +148,56 @@ function getSummaryTags(body) {
   return tags;
 }
 
-const handleRestError = (entity, res, body) => {
-  if (res.statusCode === 404) {
-    return {
-      statusCode: res.statusCode,
-      body: {
-        errors: [res.error],
-        data: null,
-        entity
-      }
-    };
-  }
+/**
+ * Graphql responses are always a 200 so rather than check the status code we check for
+ * the existence of an error.
+ *
+ * The exception to this rule is if the status code comes back as a 404, this means the graphql
+ * endpoint could not be reached and we want to detect that and handle as an error.
+ *
+ * @param entity
+ * @param res
+ * @param body
+ * @returns {{detail: *, errors: *, statusCode: *}|{data: {body, entity}, error: null}}
+ */
+const handleRestError = (entity, res, body, options) => {
+  Logger.trace({ res, body }, 'API Response');
+  const errors = _.get(res, 'body.errors', []);
 
-  Logger.trace({ body }, 'Response Body');
-
-  //handle gql errors
-  if (fp.get('body.errors.length', res)) {
-    const error = res.body.errors[0];
-    const status = res.statusCode;
-
-    switch (status) {
-      case 401:
-        return {
-          error,
-          detail: error.message,
-          body
-        };
-      case 400:
-        return {
-          error,
-          detail: error.message,
-          body
-        };
-      case 429:
-        return {
-          error,
-          detail: error.message,
-          body
-        };
-      default:
-        return {
-          error,
-          body,
-          detail: error.message
-            ? error.message
-            : `Unexpected Gql Status Code ${res.statusCode} received`
-        };
-    }
-  }
-
-  if (res.body.data.indicators !== null) {
+  if (
+    res.statusCode === 200 &&
+    errors.length === 0 &&
+    _.get(res, 'body.data.indicators')
+  ) {
     return {
       error: null,
       data: {
         entity,
         body
       }
+    };
+  } else if (res.statusCode === 404) {
+    // This 404 means the graphql endpoint was not found.  All other errors are returned as a 200 status code
+    // but with an `errors` array on the response body.
+    return {
+      error: `404 Error -- ${options.url}/graphql not found`,
+      statusCode: 404,
+      detail: `404 Error -- ${options.url}/graphql not found`
+    };
+  } else {
+    // Handle any errors from the graphql endpoint.  Errors are always a 200 but there is an errors
+    // array on the return object.  We use the first error to provide the error message but return the
+    // full array.
+    const firstErrorMessage = _.get(
+      res,
+      'body.errors[0].message',
+      'No error message available'
+    );
+    const firstStatusCode = _.get(res, 'body.errors[0].data.http_status', 'unknown');
+    return {
+      error: errors,
+      firstStatusCode,
+      detail: firstErrorMessage
     };
   }
 };
