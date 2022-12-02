@@ -50,7 +50,8 @@ function doLookup(entities, options, cb) {
   let lookupResults = [];
   let tasks = [];
 
-  Logger.debug(entities);
+  Logger.debug({ entities }, 'doLookup');
+
   entities.forEach((entity) => {
     let requestOptions = {
       method: 'POST',
@@ -103,7 +104,7 @@ function doLookup(entities, options, cb) {
     results.forEach((result) => {
       if (
         !_.get(result, 'data.body') ||
-        _.get(result, 'data.body.data.indicators.edges.length') === 0
+        _.get(result, 'data.body.data.indicators.edges.length', []) === 0
       ) {
         lookupResults.push({
           entity: result.data.entity,
