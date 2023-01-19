@@ -26,6 +26,7 @@ module.exports = {
     'OpenCTI is an open source platform allowing organizations to store, organize, visualize and share their knowledge on cyber threats.',
   entityTypes: ['ipv4', 'domain', 'hash', 'email'],
   styles: ['./styles/style.less'],
+  defaultColor: 'light-gray',
   /**
    * Provide custom component logic and template for rendering the integration details block.  If you do not
    * provide a custom template and/or component then the integration will display data as a table of key value
