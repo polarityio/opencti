@@ -2,6 +2,7 @@
   background-color: #dedede;
   border-radius: 4px;
   margin-bottom: 2px;
+  margin-top: 2px;
   padding: 3px;
   display: inline-block;
   border: 1px solid;
@@ -14,4 +15,24 @@
 .p-block {
   word-wrap: break-word;
   word-break: break-word;
+}
+
+.scrollable-block {
+  overflow-y: auto;
+  max-height: 300px;
+  margin-top: 6px;
+  width: 100%;
+  border: 1px solid border-color;
+
+  &.padded {
+    padding: 5px;
+  }
+}
+
+.observable-item {
+  margin-top: 12px;
+}
+
+.p-title {
+  margin-bottom: 1px;
 }
