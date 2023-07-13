@@ -118,10 +118,24 @@ const observablesQuery = `query GetObservedDataList(
             }
           }
         }
+        stixCoreRelationships {
+          edges {
+            node {
+              relationship_type
+              confidence
+              description
+              toRole
+              created_at
+              updated_at
+              created
+              start_time
+              stop_time
+            }
+          }
+        }
       }
     }
   }
-}
-`;
+}`;
 
 module.exports = { indicatorsQuery, observablesQuery };
