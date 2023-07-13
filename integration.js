@@ -53,8 +53,6 @@ function doLookup(entities, options, cb) {
   let lookupResults = [];
   let tasks = [];
 
-  Logger.trace({ options }, 'Options');
-
   const query =
     options.dataSources.value === 'observable' ? observablesQuery : indicatorsQuery;
 
@@ -78,9 +76,7 @@ function doLookup(entities, options, cb) {
     };
 
     tasks.push(function (done) {
-      Logger.trace({ uri: requestOptions.uri }, 'Request URI');
       requestWithDefaults(requestOptions, function (error, res, body) {
-        Logger.trace({ error, res, body }, 'Response');
         if (error) {
           Logger.trace({ error }, 'Error encountered');
           return done({
