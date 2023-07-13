@@ -114,6 +114,7 @@
         }}</span>
     </div>
   {{/if}}
+
   {{#if result.node.objectLabel.edges}}
     <div class='p-title'>
       {{fa-icon 'tag' fixedWidth=true}}
@@ -140,13 +141,13 @@
 {{/if}}
 <div class='observable'>
   {{#if details.data.stixCyberObservables}}
-    {{#each details.data.stixCyberObservables.edges as |edge index|}}
-      {{#if (gt index 0)}}
+    {{#each details.data.stixCyberObservables.edges as |edge observableNode|}}
+      {{#if (gt observableNode 0)}}
         <hr />
       {{/if}}
       <div class='p-title'>
         {{fa-icon 'tag'}}
-        Observable #{{inc index}}
+        Observable #{{inc observableNode}}
       </div>
       <div class='observable-item'>
         {{#if edge.node.observable_value}}
@@ -251,12 +252,105 @@
           {{fa-icon 'tag'}}
           Labels
         </div>
+
         {{#each edge.node.objectLabel.edges as |label|}}
           <span
             class='tag'
             style='color: {{label.node.color}}; border-color: {{label.node.color}}; background-color: {{label.node.color}}10;'
           >{{label.node.value}}</span>
         {{/each}}
+        <div class='relationship-container'>
+          {{#if (get expandableTitleStates observableNode)}}
+            <a
+              href='#'
+              class='expandable-title'
+              {{on 'click' (action 'toggleExpandableTitle' observableNode)}}
+            >
+              <span class='text'><span class='desc'>Observable Relationships:</span>
+                {{UNIQUE_VALUE}}</span>
+              {{fa-icon 'angle-up'}}
+            </a>
+            {{#if edge.node.stixCoreRelationships}}
+              {{#each edge.node.stixCoreRelationships.edges as |relationship|}}
+                <div class='relationship-item'>
+                  {{#if relationship.node.relationship_type}}
+                    <div>
+                      <span class='p-key'>Relationship Type:</span>
+                      <span class='value'>{{relationship.node.relationship_type}}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.confidence}}
+                    <div>
+                      <span class='p-key'>Confidence:</span>
+                      <span class='value'>{{relationship.node.confidence}}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.description}}
+                    <div>
+                      <span class='p-key'>Description:</span>
+                      <span class='value'>{{relationship.node.description}}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.created_at}}
+                    <div>
+                      <span class='p-key'>Created At:</span>
+                      <span class='value'>{{moment-format
+                          relationship.node.created_at
+                          timeZone=timezone
+                        }}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.updated_at}}
+                    <div>
+                      <span class='p-key'>Updated At:</span>
+                      <span class='value'>{{moment-format
+                          relationship.node.updated_at
+                          timeZone=timezone
+                        }}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.created}}
+                    <div>
+                      <span class='p-key'>Created:</span>
+                      <span class='value'>{{moment-format
+                          relationship.node.created
+                          timeZone=timezone
+                        }}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.start_time}}
+                    <div>
+                      <span class='p-key'>Start Time:</span>
+                      <span class='value'>{{moment-format
+                          relationship.node.start_time
+                          timeZone=timezone
+                        }}</span>
+                    </div>
+                  {{/if}}
+                  {{#if relationship.node.stop_time}}
+                    <div>
+                      <span class='p-key'>Stop Time:</span>
+                      <span class='value'>{{moment-format
+                          relationship.node.stop_time
+                          timeZone=timezone
+                        }}</span>
+                    </div>
+                  {{/if}}
+                </div>
+              {{/each}}
+            {{/if}}
+          {{else}}
+            <a
+              href='#'
+              class='expandable-title'
+              {{on 'click' (action 'toggleExpandableTitle' observableNode)}}
+            >
+              Observable Relationships:
+              <span class='text'>{{UNIQUE_VALUE}}</span>
+              {{fa-icon 'angle-down'}}
+            </a>
+          {{/if}}
+        </div>
       </div>
     {{/each}}
   {{/if}}
