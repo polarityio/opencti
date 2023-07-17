@@ -11,8 +11,6 @@ polarity.export = PolarityComponent.extend({
   expandableRelationshipStates: {},
   actions: {
     toggleExpandableTitle: function (index) {
-      console.log('INDEX', index);
-
       const modifiedExpandableTitleStates = Object.assign(
         {},
         this.get('expandableTitleStates'),
@@ -24,7 +22,6 @@ polarity.export = PolarityComponent.extend({
       this.set(`expandableTitleStates`, modifiedExpandableTitleStates);
     },
     expandRelationship: function (relationshipIndex) {
-      console.log('RELATIONSHIP INDEX', relationshipIndex);
       const modifiedExpandRelationshipStates = Object.assign(
         {},
         this.get('expandableRelationshipStates'),
