@@ -168,7 +168,7 @@
         {{#if edge.node.spec_version}}
           <div>
             <span class='p-key'>Spec Version:</span>
-            <span class='value'>{{moment-format edge.node.spec_ timeZone=timezone}}</span>
+            <span class='value'>{{edge.node.spec_version}}</span>
           </div>
         {{/if}}
         {{#if edge.node.creators}}
@@ -271,71 +271,71 @@
               {{fa-icon 'angle-up'}}
             </a>
             {{#if edge.node.stixCoreRelationships}}
-              {{#each edge.node.stixCoreRelationships.edges as |relationship|}}
-                <div class='relationship-item'>
-                  {{#if relationship.node.relationship_type}}
-                    <div>
-                      <span class='p-key'>Relationship Type:</span>
-                      <span class='value'>{{relationship.node.relationship_type}}</span>
+              {{#each
+                edge.node.stixCoreRelationships.edges
+                as |relationship relationshipIndex|
+              }}
+                <div
+                  class='relationship-card'
+                  {{on 'click' (action 'expandRelationship' relationshipIndex)}}
+                >
+                  <div class='card-header'>
+                    {{#if relationship.node.relationship_type}}
+                      <div class='header-item'>
+                        <span class='p-key'>Relationship Type:</span>
+                        <span class='value'>{{relationship.node.relationship_type}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.entity_type}}
+                      <div class='header-item'>
+                        <span class='p-key'>Entity Type:</span>
+                        <span class='value'>{{relationship.node.entity_type}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.to.name}}
+                      <div class='header-item'>
+                        <span class='p-key'>Name:</span>
+                        <span class='value'>{{relationship.node.to.name}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.created}}
+                      <div class='header-item'>
+                        <span class='p-key'>Created:</span>
+                        <span class='value'>{{moment-format
+                            relationship.node.created
+                            timeZone=timezone
+                          }}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.confidence}}
+                      <div class='header-item'>
+                        <span class='p-key'>Confidence:</span>
+                        <span class='value'>{{relationship.node.confidence}}</span>
+                      </div>
+                    {{/if}}
+                    <div class='expandable-information'>
+                      <div>{{fa-icon 'angle-down'}}</div>
+                      <div class='p-footnote'>Expand Information</div>
                     </div>
-                  {{/if}}
-                  {{#if relationship.node.confidence}}
-                    <div>
-                      <span class='p-key'>Confidence:</span>
-                      <span class='value'>{{relationship.node.confidence}}</span>
-                    </div>
-                  {{/if}}
-                  {{#if relationship.node.description}}
-                    <div>
-                      <span class='p-key'>Description:</span>
-                      <span class='value'>{{relationship.node.description}}</span>
-                    </div>
-                  {{/if}}
-                  {{#if relationship.node.created_at}}
-                    <div>
-                      <span class='p-key'>Created At:</span>
-                      <span class='value'>{{moment-format
-                          relationship.node.created_at
-                          timeZone=timezone
-                        }}</span>
-                    </div>
-                  {{/if}}
-                  {{#if relationship.node.updated_at}}
-                    <div>
-                      <span class='p-key'>Updated At:</span>
-                      <span class='value'>{{moment-format
-                          relationship.node.updated_at
-                          timeZone=timezone
-                        }}</span>
-                    </div>
-                  {{/if}}
-                  {{#if relationship.node.created}}
-                    <div>
-                      <span class='p-key'>Created:</span>
-                      <span class='value'>{{moment-format
-                          relationship.node.created
-                          timeZone=timezone
-                        }}</span>
-                    </div>
-                  {{/if}}
-                  {{#if relationship.node.start_time}}
-                    <div>
-                      <span class='p-key'>Start Time:</span>
-                      <span class='value'>{{moment-format
-                          relationship.node.start_time
-                          timeZone=timezone
-                        }}</span>
-                    </div>
-                  {{/if}}
-                  {{#if relationship.node.stop_time}}
-                    <div>
-                      <span class='p-key'>Stop Time:</span>
-                      <span class='value'>{{moment-format
-                          relationship.node.stop_time
-                          timeZone=timezone
-                        }}</span>
-                    </div>
-                  {{/if}}
+                    {{#if (get expandableRelationshipStates relationshipIndex)}}
+
+                      {{#if relationship.node.description}}
+                        <div class='header-item'>
+                          <span class='p-key'>Description:</span>
+                          <span class='value'>{{relationship.node.description}}</span>
+                        </div>
+                      {{/if}}
+                      {{#if relationship.node.updated_at}}
+                        <div class='header-item'>
+                          <span class='p-key'>Updated At:</span>
+                          <span class='value'>{{moment-format
+                              relationship.node.updated_at
+                              timeZone=timezone
+                            }}</span>
+                        </div>
+                      {{/if}}
+                    {{/if}}
+                  </div>
                 </div>
               {{/each}}
             {{/if}}

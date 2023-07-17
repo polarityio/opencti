@@ -118,7 +118,7 @@ function doLookup(entities, options, cb) {
         lookupResults.push({
           entity: result.data.entity,
           data: {
-            summary: [],
+            summary: getSummaryTags(result.data.body),
             details: result.data.body
           }
         });
@@ -132,25 +132,35 @@ function doLookup(entities, options, cb) {
 
 function getSummaryTags(body) {
   const tags = [];
-  let maxScore = 0;
-  let confidence = 'NA';
-  const globalCount = fp.get('data.indicators.pageInfo.globalCount', body);
-  const edges = fp.get('data.indicators.edges', body, []);
 
-  edges.forEach((edge) => {
-    const score = fp.get('node.x_opencti_score', edge, 0);
-    if (score > maxScore) {
-      maxScore = score;
-      confidence = fp.get('node.confidence', edge, 'N/A');
+  ['stixCyberObservables', 'indicators'].forEach((type) => {
+    if (_.get(body, `data.${type}.edges.length`, 0) > 0) {
+      let maxScore = 0;
+      let confidence = 'NA';
+      const globalCount = fp.get(`data.${type}.pageInfo.globalCount`, body);
+      const edges = fp.get(`data.${type}.edges`, body, []);
+
+      edges.forEach((edge) => {
+        const score = fp.get('node.x_opencti_score', edge, 0);
+        if (score > maxScore) {
+          maxScore = score;
+          confidence = fp.get('node.confidence', edge, 'N/A');
+        }
+      });
+
+      tags.push(
+        `${
+          type === 'stixCyberObservables' ? 'Observable' : 'Indicator'
+        } Count: ${globalCount}`
+      );
+      tags.push(
+        `${
+          globalCount > 1 ? 'Max Score: ' : 'Score: '
+        } ${maxScore} / Confidence: ${confidence}`
+      );
     }
   });
 
-  tags.push(`Indicator Count: ${globalCount}`);
-  tags.push(
-    `${
-      globalCount > 1 ? 'Max Score: ' : 'Score: '
-    } ${maxScore} / Confidence: ${confidence}`
-  );
   return tags;
 }
 
