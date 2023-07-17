@@ -108,7 +108,8 @@ function doLookup(entities, options, cb) {
     results.forEach((result) => {
       if (
         !_.get(result, 'data.body') ||
-        _.get(result, 'data.body.data.indicators.edges.length', []) === 0
+        _.get(result, 'data.body.data.indicators.edges.length', []) === 0 ||
+        _.get(result, 'data.body.data.stixCyberObservables.edges.length', []) === 0
       ) {
         lookupResults.push({
           entity: result.data.entity,
@@ -144,20 +145,26 @@ function getSummaryTags(body) {
         const score = fp.get('node.x_opencti_score', edge, 0);
         if (score > maxScore) {
           maxScore = score;
-          confidence = fp.get('node.confidence', edge, 'N/A');
+
+          if (type === 'indicators') {
+            confidence = fp.get('node.confidence', edge, 'N/A');
+          }
         }
       });
 
-      tags.push(
-        `${
-          type === 'stixCyberObservables' ? 'Observable' : 'Indicator'
-        } Count: ${globalCount}`
-      );
-      tags.push(
-        `${
-          globalCount > 1 ? 'Max Score: ' : 'Score: '
-        } ${maxScore} / Confidence: ${confidence}`
-      );
+      if (type === 'stixCyberObservables') {
+        tags.push(`Observable Count: ${globalCount}`);
+        tags.push(`Max Score: ${maxScore}`);
+      }
+
+      if (type === 'indicators') {
+        tags.push(`Count: ${globalCount}`);
+        tags.push(
+          `${
+            globalCount > 1 ? 'Max Score: ' : 'Score: '
+          } ${maxScore} / Confidence: ${confidence}`
+        );
+      }
     }
   });
 
