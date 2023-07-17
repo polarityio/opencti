@@ -313,27 +313,20 @@
                         <span class='value'>{{relationship.node.confidence}}</span>
                       </div>
                     {{/if}}
-                    <div class='expandable-information'>
-                      <div>{{fa-icon 'angle-down'}}</div>
-                      <div class='p-footnote'>Expand Information</div>
-                    </div>
-                    {{#if (get expandableRelationshipStates relationshipIndex)}}
-
-                      {{#if relationship.node.description}}
-                        <div class='header-item'>
-                          <span class='p-key'>Description:</span>
-                          <span class='value'>{{relationship.node.description}}</span>
-                        </div>
-                      {{/if}}
-                      {{#if relationship.node.updated_at}}
-                        <div class='header-item'>
-                          <span class='p-key'>Updated At:</span>
-                          <span class='value'>{{moment-format
-                              relationship.node.updated_at
-                              timeZone=timezone
-                            }}</span>
-                        </div>
-                      {{/if}}
+                    {{#if relationship.node.description}}
+                      <div class='header-item'>
+                        <span class='p-key'>Description:</span>
+                        <span class='value'>{{relationship.node.description}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.updated_at}}
+                      <div class='header-item'>
+                        <span class='p-key'>Updated At:</span>
+                        <span class='value'>{{moment-format
+                            relationship.node.updated_at
+                            timeZone=timezone
+                          }}</span>
+                      </div>
                     {{/if}}
                   </div>
                 </div>

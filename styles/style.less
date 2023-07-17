@@ -66,47 +66,20 @@
 
 .header-item {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center; /* Align items vertically in the center */
-  height: 100px;
-  margin-top: 100px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  height: auto;
+  margin-top: 10px;
 }
 
 .value {
   word-break: break-word;
-  margin-left: 8px; /* Added margin to the left of values */
-  white-space: nowrap; /* Prevent line breaks within values */
+  margin-left: 8px;
+  white-space: nowrap;
 }
 
-.header-item {
-  /* Other styles... */
-  display: flex;
-  flex-direction: row; /* Stack items vertically */
-  justify-content: flex-start; /* Distribute space evenly between items */
-  align-items: flex-start; /* Align items to the start of the container */
-  margin-bottom: 10px; /* Add space below each item */
-  transition: max-height 0.3s ease-out;
-  max-height: 20px; /* Adjust this value to fit your initial content */
-  margin-top: 10px;
-  overflow: hidden;
-}
-
-.relationship-card.expanded .header-item {
-  max-height: 100px; /* Adjust this value to fit your expanded content */
-  transition: max-height 0.3s ease-in;
-}
-
-.card-header {
-  /* Other styles... */
-  position: relative; /* Set the reference point for absolute positioning */
-}
-
-.expandable-information {
-  /* Other styles... */
-  position: absolute; /* Position the element absolutely */
-  bottom: 0; /* Align the element to the bottom of the parent */
-  right: 0; /* Align the element to the right of the parent */
-  display: flex; /* Make the children inline */
-  align-items: center; /* Vertically align the children in the middle */
-  gap: 5px; /* Add some space between the children */
+.relationship-card {
+  margin-top: 12px;
 }

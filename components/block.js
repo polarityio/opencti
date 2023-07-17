@@ -8,7 +8,6 @@ polarity.export = PolarityComponent.extend({
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   }),
   expandableTitleStates: {},
-  expandableRelationshipStates: {},
   actions: {
     toggleExpandableTitle: function (index) {
       console.log('INDEX', index);
@@ -22,19 +21,6 @@ polarity.export = PolarityComponent.extend({
       );
 
       this.set(`expandableTitleStates`, modifiedExpandableTitleStates);
-    },
-    expandRelationship: function (relationshipIndex) {
-      console.log('RELATIONSHIP INDEX', relationshipIndex);
-      const modifiedExpandRelationshipStates = Object.assign(
-        {},
-        this.get('expandableRelationshipStates'),
-        {
-          [relationshipIndex]: !this.get('expandableRelationshipStates')[
-            relationshipIndex
-          ]
-        }
-      );
-      this.set(`expandableRelationshipStates`, modifiedExpandRelationshipStates);
     }
   }
 });
