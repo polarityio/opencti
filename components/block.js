@@ -10,8 +10,6 @@ polarity.export = PolarityComponent.extend({
   expandableTitleStates: {},
   actions: {
     toggleExpandableTitle: function (index) {
-      console.log('INDEX', index);
-
       const modifiedExpandableTitleStates = Object.assign(
         {},
         this.get('expandableTitleStates'),
