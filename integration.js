@@ -6,16 +6,19 @@ const async = require('async');
 const fs = require('fs');
 const _ = require('lodash');
 const fp = require('lodash/fp');
-const query = require('./query');
+const { setLogger } = require('./logger');
+const { indicatorsQuery, observablesQuery } = require('./query');
 
-let Logger;
+let Logger = null;
 let requestWithDefaults;
 
 const MAX_PARALLEL_LOOKUPS = 10;
 
 function startup(logger) {
-  let defaults = {};
+  const defaults = {};
+
   Logger = logger;
+  setLogger(Logger);
 
   const { cert, key, passphrase, ca, proxy, rejectUnauthorized } = config.request;
 
@@ -50,7 +53,8 @@ function doLookup(entities, options, cb) {
   let lookupResults = [];
   let tasks = [];
 
-  Logger.debug({ entities }, 'doLookup');
+  const query =
+    options.dataSources.value === 'observable' ? observablesQuery : indicatorsQuery;
 
   entities.forEach((entity) => {
     let requestOptions = {
@@ -60,22 +64,21 @@ function doLookup(entities, options, cb) {
         Authorization: 'Bearer ' + options.apiKey
       },
       body: {
-        query: query,
+        query,
         variables: {
           search: entity.value,
           first: 5,
-          orderBy: 'valid_until',
+          // orderBy: 'valid_until',
           orderMode: 'desc'
         }
       },
       json: true
     };
 
-    Logger.trace({ requestOptions }, 'Request Options');
-
     tasks.push(function (done) {
       requestWithDefaults(requestOptions, function (error, res, body) {
         if (error) {
+          Logger.trace({ error }, 'Error encountered');
           return done({
             detail: 'HTTP error encountered',
             error
@@ -83,6 +86,8 @@ function doLookup(entities, options, cb) {
         }
 
         let processedResult = handleRestError(entity, res, body, options);
+
+        Logger.trace({ processedResult }, 'Processed Result');
 
         if (processedResult.error) {
           done(processedResult);
@@ -96,7 +101,6 @@ function doLookup(entities, options, cb) {
 
   async.parallelLimit(tasks, MAX_PARALLEL_LOOKUPS, (err, results) => {
     if (err) {
-      Logger.error({ err: err }, 'Error');
       cb(err);
       return;
     }
@@ -104,14 +108,14 @@ function doLookup(entities, options, cb) {
     results.forEach((result) => {
       if (
         !_.get(result, 'data.body') ||
-        _.get(result, 'data.body.data.indicators.edges.length', []) === 0
+        _.get(result, 'data.body.data.indicators.edges.length', []) === 0 ||
+        _.get(result, 'data.body.data.stixCyberObservables.edges.length', []) === 0
       ) {
         lookupResults.push({
           entity: result.data.entity,
           data: null
         });
       } else {
-        Logger.trace({ RESULT: result });
         lookupResults.push({
           entity: result.data.entity,
           data: {
@@ -122,30 +126,48 @@ function doLookup(entities, options, cb) {
       }
     });
 
-    Logger.debug({ lookupResults }, 'Results');
+    Logger.trace({ lookupResults }, 'Lookup Results');
     cb(null, lookupResults);
   });
 }
 
 function getSummaryTags(body) {
   const tags = [];
-  let maxScore = 0;
-  let confidence = 'NA';
-  const globalCount = fp.get('data.indicators.pageInfo.globalCount', body);
-  const edges = fp.get('data.indicators.edges', body, []);
-  edges.forEach((edge) => {
-    const score = fp.get('node.x_opencti_score', edge, 0);
-    if (score > maxScore) {
-      maxScore = score;
-      confidence = fp.get('node.confidence', edge, 'N/A');
+
+  ['stixCyberObservables', 'indicators'].forEach((type) => {
+    if (_.get(body, `data.${type}.edges.length`, 0) > 0) {
+      let maxScore = 0;
+      let confidence = 'NA';
+      const globalCount = fp.get(`data.${type}.pageInfo.globalCount`, body);
+      const edges = fp.get(`data.${type}.edges`, body, []);
+
+      edges.forEach((edge) => {
+        const score = fp.get('node.x_opencti_score', edge, 0);
+        if (score > maxScore) {
+          maxScore = score;
+
+          if (type === 'indicators') {
+            confidence = fp.get('node.confidence', edge, 'N/A');
+          }
+        }
+      });
+
+      if (type === 'stixCyberObservables') {
+        tags.push(`Observable Count: ${globalCount}`);
+        tags.push(`Max Score: ${maxScore}`);
+      }
+
+      if (type === 'indicators') {
+        tags.push(`Count: ${globalCount}`);
+        tags.push(
+          `${
+            globalCount > 1 ? 'Max Score: ' : 'Score: '
+          } ${maxScore} / Confidence: ${confidence}`
+        );
+      }
     }
   });
-  tags.push(`Indicator Count: ${globalCount}`);
-  tags.push(
-    `${
-      globalCount > 1 ? 'Max Score: ' : 'Score: '
-    } ${maxScore} / Confidence: ${confidence}`
-  );
+
   return tags;
 }
 
@@ -162,14 +184,18 @@ function getSummaryTags(body) {
  * @returns {{detail: *, errors: *, statusCode: *}|{data: {body, entity}, error: null}}
  */
 const handleRestError = (entity, res, body, options) => {
-  Logger.trace({ res, body }, 'API Response');
   const errors = _.get(res, 'body.errors', []);
 
-  if (
-    res.statusCode === 200 &&
-    errors.length === 0 &&
-    _.get(res, 'body.data.indicators')
-  ) {
+  Logger.trace({ entity, res, body, options }, 'Processed Result');
+
+  Logger.trace({ errors }, 'Errors');
+
+  const dataFound =
+    _.get(res, 'body.data.indicators') || _.get(res, 'body.data.stixCyberObservables');
+
+  Logger.trace({ dataFound }, 'Data Found');
+
+  if (res.statusCode === 200 && errors.length === 0 && dataFound) {
     return {
       error: null,
       data: {
