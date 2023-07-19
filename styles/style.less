@@ -2,6 +2,7 @@
   background-color: #dedede;
   border-radius: 4px;
   margin-bottom: 2px;
+  margin-top: 2px;
   padding: 3px;
   display: inline-block;
   border: 1px solid;
@@ -14,4 +15,71 @@
 .p-block {
   word-wrap: break-word;
   word-break: break-word;
+}
+
+.scrollable-block {
+  overflow-y: auto;
+  max-height: 300px;
+  margin-top: 6px;
+  width: 100%;
+  border: 1px solid border-color;
+
+  &.padded {
+    padding: 5px;
+  }
+}
+
+.observable-item {
+  margin-top: 12px;
+}
+
+.relationship-container {
+  margin-top: 5px;
+}
+
+.relationship-item {
+  margin-top: 12px;
+}
+
+.p-title {
+  margin-bottom: 1px;
+}
+
+.expandable-title {
+  display: block;
+  color: #5ccd18 !important;
+  font-weight: 600;
+  margin-bottom: 5px;
+  .text {
+    color: #5ccd18 !important;
+    border-bottom: 1px solid #5ccd18;
+    .desc {
+      color: black !important;
+      font-weight: 400 !important;
+    }
+  }
+}
+
+.p-key {
+  font-weight: bold;
+}
+
+.header-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  height: auto;
+  margin-top: 10px;
+}
+
+.value {
+  word-break: break-word;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.relationship-card {
+  margin-top: 12px;
 }

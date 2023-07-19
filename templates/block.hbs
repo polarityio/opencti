@@ -1,7 +1,10 @@
+{{! INDICATORS}}
 {{#if (gt details.data.indicators.pageInfo.globalCount 5)}}
-    <div>
-        <span class="p-footnote">Showing first 5 of {{details.data.indicators.pageInfo.globalCount}} results</span>
-    </div>
+  <div>
+    <span class='p-footnote'>Showing first 5 of
+      {{details.data.indicators.pageInfo.globalCount}}
+      results</span>
+  </div>
 {{/if}}
 {{#each details.data.indicators.edges as |result index|}}
   {{#if (gt index 0)}}
@@ -10,21 +13,18 @@
   <span class='p-title'>{{fa-icon icon='bug' fixedWidth=true}}
     Indicator #{{inc index}}
     Details:</span>
-  {{#if result.node.name}}
+  {{#if result.name}}
     <div>
       <span class='p-key'>Indicator:</span>
-      <a
-        href='{{webUrl}}dashboard/observations/indicators/{{result.node.id}}'
-        class='p-link'
-      >
-        {{result.node.name}}
+      <a href='{{webUrl}}dashboard/observations/indicators/{{result.id}}' class='p-link'>
+        {{result.name}}
         {{fa-icon 'external-link-square' class='external-link-icon'}}</a>
     </div>
   {{/if}}
-  {{#if result.node.x_opencti_score}}
+  {{#if result.x_opencti_score}}
     <div>
       <span class='p-key'>Score:</span>
-      <span class='p-value'><b>{{result.node.x_opencti_score}}/100</b></span>
+      <span class='p-value' style='font-weight: bold;'>{{result.x_opencti_score}}</span>
     </div>
   {{/if}}
   {{#if result.node.confidence}}
@@ -70,7 +70,8 @@
         href='{{webUrl}}dashboard/entities/organizations/{{result.node.createdBy.id}}'
         class='p-link'
       >
-        {{result.node.createdBy.name}} ({{result.node.createdBy.entity_type}})
+        {{result.node.createdBy.name}}
+        ({{result.node.createdBy.entity_type}})
         {{fa-icon 'external-link-square' class='external-link-icon'}}</a>
     </div>
   {{/if}}
@@ -113,6 +114,7 @@
         }}</span>
     </div>
   {{/if}}
+
   {{#if result.node.objectLabel.edges}}
     <div class='p-title'>
       {{fa-icon 'tag' fixedWidth=true}}
@@ -120,8 +122,229 @@
     </div>
     <div class='tags'>
       {{#each result.node.objectLabel.edges as |label|}}
-        <span class='tag' style="color: {{label.node.color}}; border-color: {{label.node.color}}; background-color: {{label.node.color}}10;">{{label.node.value}}</span>
+        <span
+          class='tag'
+          style='color: {{label.node.color}}; border-color: {{label.node.color}}; background-color: {{label.node.color}}10;'
+        >{{label.node.value}}</span>
       {{/each}}
     </div>
   {{/if}}
 {{/each}}
+
+{{! OBSERVABLES}}
+{{#if (gt details.data.stixCyberObservables.pageInfo.globalCount 5)}}
+  <div>
+    <span class='p-footnote'>Showing first 5 of
+      {{details.data.stixCyberObservables.pageInfo.globalCount}}
+      results</span>
+  </div>
+{{/if}}
+<div class='observable'>
+  {{#if details.data.stixCyberObservables}}
+    {{#each details.data.stixCyberObservables.edges as |edge observableNode|}}
+      {{#if (gt observableNode 0)}}
+        <hr />
+      {{/if}}
+      <div class='p-title'>
+        {{fa-icon 'tag'}}
+        Observable #{{inc observableNode}}
+      </div>
+      <div class='observable-item'>
+        {{#if edge.node.observable_value}}
+          <div>
+            <span class='p-key'>Observable:</span>
+            <span class='value'>{{edge.node.observable_value}}</span>
+          </div>
+        {{/if}}
+        {{#if edge.node.x_opencti_score}}
+          <div>
+            <span class='p-key'>Score:</span>
+            <span
+              class='value'
+              style='font-weight: bold;'
+            >{{edge.node.x_opencti_score}}/100</span>
+          </div>
+        {{/if}}
+        {{#if edge.node.spec_version}}
+          <div>
+            <span class='p-key'>Spec Version:</span>
+            <span class='value'>{{edge.node.spec_version}}</span>
+          </div>
+        {{/if}}
+        {{#if edge.node.creators}}
+          {{#each edge.node.creators as |creator|}}
+            <div>
+              <span class='p-key'>Creator:</span>
+              <span class='value'>{{creator.name}}</span>
+            </div>
+          {{/each}}
+        {{/if}}
+        {{#if edge.node.created_at}}
+          <div>
+            <span class='p-key'>Created At:</span>
+            <span class='value'>{{moment-format
+                edge.node.created_at
+                timeZone=timezone
+              }}</span>
+          </div>
+        {{/if}}
+        {{#if edge.node.updated_at}}
+          <div>
+            <span class='p-key'>Updated At:</span>
+            <span class='value'>{{moment-format
+                edge.node.updated
+                timeZone=timezone
+              }}</span>
+          </div>
+        {{/if}}
+
+        {{#if edge.node.x_opencti_description}}
+          <div class='p-title'>
+            {{fa-icon 'clipboard'}}
+            Description
+          </div>
+          {{#if edge.node.x_opencti_description}}
+            <div class='scrollable-block'>
+              <table>
+                <tbody>
+                  <tr><td>{{edge.node.x_opencti_description}}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          {{/if}}
+        {{/if}}
+
+        <div class='p-title'>
+          {{fa-icon 'clipboard'}}
+          Reports
+        </div>
+        {{#each edge.node.reports.edges as |report|}}
+          {{#if report.node.description}}
+            <div class='scrollable-block'>
+              <table>
+                <tbody>
+                  <tr><td>{{report.node.description}}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          {{/if}}
+        {{/each}}
+
+        {{#if edge.node.notes.edges}}
+          <div class='p-title'>
+            {{fa-icon 'clipboard'}}
+            Notes
+          </div>
+          {{#each edge.node.notes.edges as |note|}}
+            {{#if note.node.content}}
+              <div class='scrollable-block'>
+                <table>
+                  <tbody>
+                    <tr><td>{{note.node.content}}</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            {{/if}}
+          {{/each}}
+        {{/if}}
+
+        <div class='p-title'>
+          {{fa-icon 'tag'}}
+          Labels
+        </div>
+
+        {{#each edge.node.objectLabel.edges as |label|}}
+          <span
+            class='tag'
+            style='color: {{label.node.color}}; border-color: {{label.node.color}}; background-color: {{label.node.color}}10;'
+          >{{label.node.value}}</span>
+        {{/each}}
+        <div class='relationship-container'>
+          {{#if (get expandableTitleStates observableNode)}}
+            <a
+              href='#'
+              class='expandable-title'
+              {{on 'click' (action 'toggleExpandableTitle' observableNode)}}
+            >
+              <span class='text'><span class='desc'>Observable Relationships:</span>
+                {{UNIQUE_VALUE}}</span>
+              {{fa-icon 'angle-up'}}
+            </a>
+            {{#if edge.node.stixCoreRelationships}}
+              {{#each
+                edge.node.stixCoreRelationships.edges
+                as |relationship relationshipIndex|
+              }}
+                <div
+                  class='relationship-card'
+                  {{on 'click' (action 'expandRelationship' relationshipIndex)}}
+                >
+                  <div class='card-header'>
+                    {{#if relationship.node.relationship_type}}
+                      <div class='header-item'>
+                        <span class='p-key'>Relationship Type:</span>
+                        <span class='value'>{{relationship.node.relationship_type}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.entity_type}}
+                      <div class='header-item'>
+                        <span class='p-key'>Entity Type:</span>
+                        <span class='value'>{{relationship.node.entity_type}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.to.name}}
+                      <div class='header-item'>
+                        <span class='p-key'>Name:</span>
+                        <span class='value'>{{relationship.node.to.name}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.created}}
+                      <div class='header-item'>
+                        <span class='p-key'>Created:</span>
+                        <span class='value'>{{moment-format
+                            relationship.node.created
+                            timeZone=timezone
+                          }}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.confidence}}
+                      <div class='header-item'>
+                        <span class='p-key'>Confidence:</span>
+                        <span class='value'>{{relationship.node.confidence}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.description}}
+                      <div class='header-item'>
+                        <span class='p-key'>Description:</span>
+                        <span class='value'>{{relationship.node.description}}</span>
+                      </div>
+                    {{/if}}
+                    {{#if relationship.node.updated_at}}
+                      <div class='header-item'>
+                        <span class='p-key'>Updated At:</span>
+                        <span class='value'>{{moment-format
+                            relationship.node.updated_at
+                            timeZone=timezone
+                          }}</span>
+                      </div>
+                    {{/if}}
+                  </div>
+                </div>
+              {{/each}}
+            {{/if}}
+          {{else}}
+            <a
+              href='#'
+              class='expandable-title'
+              {{on 'click' (action 'toggleExpandableTitle' observableNode)}}
+            >
+              Observable Relationships:
+              <span class='text'>{{UNIQUE_VALUE}}</span>
+              {{fa-icon 'angle-down'}}
+            </a>
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  {{/if}}
+</div>

@@ -3,16 +3,9 @@
   "name": "OpenCTI",
   "acronym": "OCTI",
   "description": "OpenCTI is an open source platform allowing organizations to store, organize, visualize and share their knowledge on cyber threats.",
-  "entityTypes": [
-    "IPv4",
-    "domain",
-    "hash",
-    "email"
-  ],
+  "entityTypes": ["domain", "hash", "email", "IPv4"],
   "defaultColor": "light-gray",
-  "styles": [
-    "./styles/style.less"
-  ],
+  "styles": ["./styles/style.less"],
   "block": {
     "component": {
       "file": "./components/block.js"
@@ -47,6 +40,29 @@
       "description": "Valid OpenCTI API Key",
       "default": "",
       "type": "password",
+      "userCanEdit": false,
+      "adminOnly": true
+    },
+    {
+      "key": "dataSources",
+      "name": "Data Sources",
+      "description": "Select the data sources you would like to use for the OpenCTI integration.  If no data sources are selected, all data sources will be used.",
+      "default": {
+        "value": "observable",
+        "display": "Observable"
+      },
+      "type": "select",
+      "options": [
+        {
+          "value": "observable",
+          "display": "Observable"
+        },
+        {
+          "value": "indicators",
+          "display": "Indicators"
+        }
+      ],
+      "multiple": false,
       "userCanEdit": false,
       "adminOnly": true
     }

@@ -24,7 +24,7 @@ module.exports = {
    */
   description:
     'OpenCTI is an open source platform allowing organizations to store, organize, visualize and share their knowledge on cyber threats.',
-  entityTypes: ['ipv4', 'domain', 'hash', 'email'],
+  entityTypes: ['IPv4', 'domain', 'hash', 'email'],
   styles: ['./styles/style.less'],
   defaultColor: 'light-gray',
   /**
@@ -54,7 +54,7 @@ module.exports = {
     ca: '',
     // An HTTP proxy to be used. Supports proxy Auth with Basic Auth, identical to support for
     // the url parameter (by embedding the auth info in the uri)
-    proxy: ""
+    proxy: ''
   },
   logging: {
     level: 'info' //trace, debug, info, warn, error, fatal
@@ -70,7 +70,8 @@ module.exports = {
     {
       key: 'url',
       name: 'OpenCTI URL',
-      description: 'The Base URL for your OpenCTI instance including the scheme. (i.e. - https://myopenctiserver). Option must be set to "Users can view only"',
+      description:
+        'The Base URL for your OpenCTI instance including the scheme. (i.e. - https://myopenctiserver). Option must be set to "Users can view only"',
       type: 'text',
       default: '',
       userCanEdit: false,
@@ -82,6 +83,30 @@ module.exports = {
       description: 'Valid OpenCTI API Key',
       default: '',
       type: 'password',
+      userCanEdit: false,
+      adminOnly: true
+    },
+    {
+      key: 'dataSources',
+      name: 'Data Sources',
+      description:
+        'Select the data sources you would like to use for the OpenCTI integration.  If no data sources are selected, all data sources will be used.',
+      default: {
+        value: 'observable',
+        display: 'Observable'
+      },
+      type: 'select',
+      options: [
+        {
+          value: 'observable',
+          display: 'Observable'
+        },
+        {
+          value: 'indicators',
+          display: 'Indicators'
+        }
+      ],
+      multiple: false,
       userCanEdit: false,
       adminOnly: true
     }
