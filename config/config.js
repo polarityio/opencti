@@ -24,7 +24,7 @@ module.exports = {
    */
   description:
     'OpenCTI is an open source platform allowing organizations to store, organize, visualize and share their knowledge on cyber threats.',
-  entityTypes: ['ipv4', 'domain', 'hash', 'email'],
+  entityTypes: ['IPv4', 'domain', 'hash', 'email'],
   styles: ['./styles/style.less'],
   defaultColor: 'light-gray',
   /**

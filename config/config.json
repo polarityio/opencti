@@ -3,7 +3,7 @@
   "name": "OpenCTI",
   "acronym": "OCTI",
   "description": "OpenCTI is an open source platform allowing organizations to store, organize, visualize and share their knowledge on cyber threats.",
-  "entityTypes": ["domain", "hash", "email", "ipv4"],
+  "entityTypes": ["domain", "hash", "email", "IPv4"],
   "defaultColor": "light-gray",
   "styles": ["./styles/style.less"],
   "block": {
