@@ -1,15 +1,15 @@
 .tag {
-  background-color: #dedede;
   border-radius: 4px;
   margin-bottom: 2px;
   margin-top: 2px;
   padding: 3px;
   display: inline-block;
-  border: 1px solid;
+  border: 1px solid #dedede;
 }
 
 .external-link-icon {
   font-size: 8px;
+  margin-bottom: 1px;
 }
 
 .p-block {
@@ -19,14 +19,8 @@
 
 .scrollable-block {
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 150px;
   margin-top: 6px;
-  width: 100%;
-  border: 1px solid border-color;
-
-  &.padded {
-    padding: 5px;
-  }
 }
 
 .observable-item {
@@ -60,10 +54,6 @@
   }
 }
 
-.p-key {
-  font-weight: bold;
-}
-
 .header-item {
   display: flex;
   flex-direction: row;
@@ -74,12 +64,39 @@
   margin-top: 10px;
 }
 
-.value {
-  word-break: break-word;
-  margin-left: 8px;
-  white-space: nowrap;
-}
-
 .relationship-card {
   margin-top: 12px;
+}
+
+.content-block {
+  margin-top: 10px;
+  /*font-size: 13px;*/
+  border: 1px solid #dedede;
+  border-bottom: 2px solid #dedede;
+  border-radius: 4px;
+
+  &.no-header{
+    padding: 5px;
+  }
+
+  .content-block-header {
+    background-color: #f8f8f8;
+    padding: 5px;
+
+    //&:hover {
+    //  background-color: darken(#f8f8f8, 5%);
+    //}
+
+    &.content-open {
+      border-bottom: 1px solid #dedede;
+    }
+
+    &.content-closed {
+      border-bottom: 0px;
+    }
+  }
+
+  .content-text {
+    padding: 5px;
+  }
 }

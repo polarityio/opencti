@@ -66,7 +66,7 @@ function doLookup(entities, options, cb) {
       body: {
         query,
         variables: {
-          search: entity.value,
+          search: `"${entity.value}"`,
           first: 5,
           // orderBy: 'valid_until',
           orderMode: 'desc'
