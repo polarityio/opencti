@@ -19,6 +19,9 @@ polarity.export = PolarityComponent.extend({
       );
 
       this.set(`expandableTitleStates`, modifiedExpandableTitleStates);
+    },
+    expandRelationship: function(relationshipIndex){
+
     }
   }
 });

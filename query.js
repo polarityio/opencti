@@ -1,5 +1,5 @@
 const indicatorsQuery = `query Indicators(
-  $filters: [IndicatorsFiltering]
+  $filters: FilterGroup
   $search: String
   $first: Int
   $after: ID
@@ -29,13 +29,9 @@ const indicatorsQuery = `query Indicators(
         x_opencti_score
         x_opencti_detection
         objectLabel {
-          edges {
-            node {
-              id
-              value
-              color
-            }
-          }
+          id
+          value
+          color
         }
         createdBy {
           ... on Identity {
@@ -57,7 +53,7 @@ const indicatorsQuery = `query Indicators(
 }`;
 
 const observablesQuery = `query GetObservedDataList(
-  $filters: [StixCyberObservablesFiltering]
+  $filters: FilterGroup
   $search: String
   $first: Int
   $after: ID
@@ -84,22 +80,14 @@ const observablesQuery = `query GetObservedDataList(
         x_opencti_score
         x_opencti_description
         objectMarking {
-          edges {
-            node {
-              definition
-              definition_type
-              x_opencti_order
-              x_opencti_color
-            }
-          }
+          definition
+          definition_type
+          x_opencti_order
+          x_opencti_color
         }
         objectLabel {
-          edges {
-            node {
-              value
-              color
-            }
-          }
+          value
+          color
         }
         creators {
           name
@@ -107,13 +95,23 @@ const observablesQuery = `query GetObservedDataList(
         reports {
           edges {
             node {
+              id,
+              name,
+              published,
               description
+              createdBy {
+                name
+              }
             }
           }
         }
         notes {
           edges {
             node {
+              createdBy {
+                name
+              },
+              created,
               content
             }
           }
@@ -140,13 +138,9 @@ const observablesQuery = `query GetObservedDataList(
                   created_at
                   updated_at
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                 }
                 ... on AttackPattern {
@@ -154,33 +148,21 @@ const observablesQuery = `query GetObservedDataList(
                   description
                   x_mitre_id
                   killChainPhases {
-                    edges {
-                      node {
-                        id
-                        phase_name
-                        x_opencti_order
-                      }
-                    }
+                    id
+                    phase_name
+                    x_opencti_order
                   }
                   objectMarking {
-                    edges {
-                      node {
-                        id
-                        definition_type
-                        definition
-                        x_opencti_order
-                        x_opencti_color
-                      }
-                    }
+                    id
+                    definition_type
+                    definition
+                    x_opencti_order
+                    x_opencti_color
                   }
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                   id
                 }
@@ -226,24 +208,16 @@ const observablesQuery = `query GetObservedDataList(
                   x_opencti_main_observable_type
                   created
                   objectMarking {
-                    edges {
-                      node {
-                        id
-                        definition_type
-                        definition
-                        x_opencti_order
-                        x_opencti_color
-                      }
-                    }
+                    id
+                    definition_type
+                    definition
+                    x_opencti_order
+                    x_opencti_color
                   }
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                 }
                 ... on Infrastructure {
@@ -369,24 +343,16 @@ const observablesQuery = `query GetObservedDataList(
                   parent_types
                   observable_value
                   objectMarking {
-                    edges {
-                      node {
-                        id
-                        definition_type
-                        definition
-                        x_opencti_order
-                        x_opencti_color
-                      }
-                    }
+                    id
+                    definition_type
+                    definition
+                    x_opencti_order
+                    x_opencti_color
                   }
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                 }
                 ... on BasicRelationship {
@@ -551,13 +517,9 @@ const observablesQuery = `query GetObservedDataList(
                   created_at
                   updated_at
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                 }
                 ... on AttackPattern {
@@ -565,33 +527,21 @@ const observablesQuery = `query GetObservedDataList(
                   description
                   x_mitre_id
                   killChainPhases {
-                    edges {
-                      node {
-                        id
-                        phase_name
-                        x_opencti_order
-                      }
-                    }
+                    id
+                    phase_name
+                    x_opencti_order
                   }
                   objectMarking {
-                    edges {
-                      node {
-                        id
-                        definition_type
-                        definition
-                        x_opencti_order
-                        x_opencti_color
-                      }
-                    }
+                    id
+                    definition_type
+                    definition
+                    x_opencti_order
+                    x_opencti_color
                   }
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                   id
                 }
@@ -637,24 +587,16 @@ const observablesQuery = `query GetObservedDataList(
                   x_opencti_main_observable_type
                   created
                   objectMarking {
-                    edges {
-                      node {
-                        id
-                        definition_type
-                        definition
-                        x_opencti_order
-                        x_opencti_color
-                      }
-                    }
+                    id
+                    definition_type
+                    definition
+                    x_opencti_order
+                    x_opencti_color
                   }
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                 }
                 ... on Infrastructure {
@@ -780,24 +722,16 @@ const observablesQuery = `query GetObservedDataList(
                   parent_types
                   observable_value
                   objectMarking {
-                    edges {
-                      node {
-                        id
-                        definition_type
-                        definition
-                        x_opencti_order
-                        x_opencti_color
-                      }
-                    }
+                    id
+                    definition_type
+                    definition
+                    x_opencti_order
+                    x_opencti_color
                   }
                   objectLabel {
-                    edges {
-                      node {
-                        id
-                        value
-                        color
-                      }
-                    }
+                    id
+                    value
+                    color
                   }
                 }
                 ... on BasicRelationship {
@@ -965,6 +899,7 @@ const observablesQuery = `query GetObservedDataList(
       globalCount
     }
   }
-}`;
+}
+`;
 
 module.exports = { indicatorsQuery, observablesQuery };
